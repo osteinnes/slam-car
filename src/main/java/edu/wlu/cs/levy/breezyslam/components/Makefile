@@ -19,7 +19,7 @@ BASEDIR = ../../../../../../..
 JAVADIR = $(BASEDIR)/java
 CDIR    = $(BASEDIR)/c
 JFLAGS = -Xlint
-JDKINC = -I /usr/lib/jvm/java-7-openjdk-amd64/include
+JDKINC = -I /usr/lib/jvm/java-8-oracle/include -I /usr/lib/jvm/java-8-oracle/include/linux
 #JDKINC = -I /opt/jdk1.7.0_67/include -I /opt/jdk1.7.0_67/include/linux
 
 # Set library extension based on OS
