@@ -28,7 +28,10 @@ public class StreamVideo {
     private void doSetupSocket(int localPort) {
         try {
             this.socket = new DatagramSocket(localPort);
+            this.socket.connect(InetAddress.getByName("192.168.0.102"), 9000);
         } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e){
             e.printStackTrace();
         }
         System.out.println("Created socket on port: " + localPort);
