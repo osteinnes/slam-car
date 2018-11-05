@@ -2,7 +2,9 @@ package sweep;
 
 import edu.wlu.cs.levy.breezyslam.algorithms.*;
 import edu.wlu.cs.levy.breezyslam.components.*;
+import edu.wlu.cs.levy.breezyslam.robots.WheeledRobot;
 import io.scanse.sweep.*;
+import sdv.algorithms.slam.Robot;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -47,7 +49,10 @@ public class TestSweepWithSLAM {
             Laser myLidar;
             RMHCSLAM slam;
             PoseChange poseChange;
+            WheeledRobot wheeledRobot;
+            Robot robot;
 
+            robot = new Robot(120, 170);
             poseChange = new PoseChange();
 
             myLidar = new Laser(1060, 1000,
@@ -86,6 +91,7 @@ public class TestSweepWithSLAM {
                     ns = scans.size();
                     System.out.println("Scan size: " + ns);
 
+                    poseChange = robot.computePoseChange(time, 10 , 10 );
                     for (int x = 0; x < ns; x++) {
                         int[] scan = scans.elementAt(x);
                         System.out.println("Element in scan: " + Arrays.toString(scan));
