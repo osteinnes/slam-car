@@ -10,7 +10,7 @@ import java.util.Scanner;
  *
  * @author Ole-martin Steinnes
  */
-public class MotorController {
+public class MotorController extends Thread {
 
 
     private boolean run = true;
@@ -24,10 +24,6 @@ public class MotorController {
 
     private Scanner keyboard;
 
-    public static String[] inputParser(String keyword) {
-        return keyword.split(":");
-    }
-
     /**
      * Constructor of the MotorController
      */
@@ -37,8 +33,8 @@ public class MotorController {
     }
 
 
-    public void runMotorControl() {
-        while (run) {
+    public void run() {
+        while (this.run) {
             System.out.println("Entering while");
             server.messageFromClient();
             String text = server.clientString;
@@ -117,5 +113,9 @@ public class MotorController {
             System.out.println("Waiting for connection");
             server.connect();
         }
+    }
+
+    public String[] inputParser(String keyword) {
+        return keyword.split(":");
     }
 }

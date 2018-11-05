@@ -23,9 +23,4 @@ public class RunWebcamera extends Thread {
         }
 
     }
-
-    public static void main(String[] args) {
-        RunWebcamera camera = new RunWebcamera();
-        camera.start();
-    }
 }
