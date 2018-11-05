@@ -2,6 +2,7 @@ package sweep;
 
 import edu.wlu.cs.levy.breezyslam.algorithms.*;
 import edu.wlu.cs.levy.breezyslam.components.*;
+import io.scanse.sweep.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

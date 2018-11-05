@@ -29,7 +29,9 @@ public class Map
 {
 	static 
     {
-		System.loadLibrary("jnibreezyslam_components");
+        System.load("/home/odroid/Projects/rtc/src/main/java/edu/wlu/cs/levy/breezyslam/components/libjnibreezyslam_components.so");
+		//
+        //System.loadLibrary("jnibreezyslam_components");
 	}
 
 	private native void init(int size_pixels, double size_meters);

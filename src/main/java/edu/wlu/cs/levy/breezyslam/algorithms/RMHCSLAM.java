@@ -33,7 +33,8 @@ public class RMHCSLAM extends SinglePositionSLAM
 
 	static 
     {
-		System.loadLibrary("jnibreezyslam_algorithms");
+		System.load("/home/odroid/Projects/rtc/src/main/java/edu/wlu/cs/levy/breezyslam/algorithms/libjnibreezyslam_algorithms.so");
+        //System.loadLibrary("jnibreezyslam_algorithms");
 	}
 
 	private native void init(int random_seed);
