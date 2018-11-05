@@ -47,21 +47,23 @@ public class TcpClient {
         }
         return connected;
     }
-//    public void messageFromServer(){
-//        try {
-//                     serverResponse = in.readLine();
-//                      if(serverResponse != null) {
-//                          serverResponse = serverResponse.replaceAll("\\p{P}","");
-//                          System.out.println("From server " + serverResponse);
-//                      }
-//                      else{
-//                          System.out.println("No response");
-//                    }
-//              }
-//        catch (IOException ex){
-//            System.out.println(ex.toString());
-//        }
-//    }
+
+
+    public void messageFromServer(){
+        try {
+                     serverResponse = in.readLine();
+                      if(serverResponse != null) {
+                          serverResponse = serverResponse.replaceAll("\\p{P}","");
+                          System.out.println("From server " + serverResponse);
+                      }
+                      else{
+                          System.out.println("No response");
+                    }
+              }
+        catch (IOException ex){
+            System.out.println(ex.toString());
+        }
+    }
 
     /**
      * Sends request to get encoder data to the server
