@@ -10,7 +10,7 @@ import java.util.Scanner;
  *
  * @author Ole-martin Steinnes
  */
-public class MotorController extends Thread {
+public class MotorController{
 
 
     private boolean run = true;
@@ -34,7 +34,6 @@ public class MotorController extends Thread {
 
 
     public void run() {
-        while (this.run) {
             System.out.println("Entering while");
             server.messageFromClient();
             String text = server.clientString;
@@ -84,7 +83,7 @@ public class MotorController extends Thread {
             }
 
         }
-    }
+
 
     /**
      * Set up fields for motor controller

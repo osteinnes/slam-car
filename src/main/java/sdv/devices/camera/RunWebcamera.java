@@ -2,6 +2,8 @@ package sdv.devices.camera;
 
 import sdv.networking.camera.StreamVideo;
 
+import java.io.IOException;
+
 /**
  * @author Eirik G. Gustafsson
  * @version 05.11.2018.
@@ -9,7 +11,7 @@ import sdv.networking.camera.StreamVideo;
 public class RunWebcamera extends Thread {
 
     @Override
-    public synchronized void start() {
+    public void run() {
 
         StreamVideo streamVideo = new StreamVideo(8001);
         WebCam readWebcam = new WebCam();
@@ -22,8 +24,8 @@ public class RunWebcamera extends Thread {
 
             try {
                 streamVideo.doSendImage(readWebcam.doGetImage());
-            } catch (Exception e) {
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

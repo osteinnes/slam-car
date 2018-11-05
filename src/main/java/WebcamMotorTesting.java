@@ -11,6 +11,9 @@ public class WebcamMotorTesting {
         MotorController motorController = new MotorController();
 
         WebCam.start();
-        motorController.start();
+        do {
+            System.out.println("Looping!");
+            motorController.run();
+        } while (true);
     }
 }
