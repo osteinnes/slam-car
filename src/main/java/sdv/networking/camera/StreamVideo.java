@@ -31,7 +31,25 @@ public class StreamVideo {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        System.out.println("Created socket on port: " + localPort);
+        System.out.println("Webcam: Created socket on port: " + localPort);
+    }
+
+    /**
+     * @return Sockets connection status.
+     */
+    public boolean getIsConnected() {
+        return this.socket.isConnected();
+    }
+
+    /**
+     * Connects the socket to remote host address.
+     */
+    public void doConnect() {
+        try {
+            this.socket.connect(this.socket.getRemoteSocketAddress());
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
 

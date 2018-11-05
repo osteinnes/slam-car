@@ -15,9 +15,14 @@ public class RunWebcamera extends Thread {
         WebCam readWebcam = new WebCam();
 
         while (true) {
+
+            if(!streamVideo.getIsConnected()) {
+                streamVideo.doConnect();
+            }
+
             try {
                 streamVideo.doSendImage(readWebcam.doGetImage());
-            } catch (Exception exc) {
+            } catch (Exception e) {
 
             }
         }
