@@ -5,7 +5,7 @@ import sdv.networking.motor.TcpClient;
 import sdv.networking.motor.TcpServer;
 import java.util.Scanner;
 
-class Main {
+class MotorControllerTest {
 
     public static String[] inputParser(String keyword) {
         return keyword.split(":");
