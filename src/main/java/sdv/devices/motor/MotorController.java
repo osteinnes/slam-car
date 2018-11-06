@@ -10,7 +10,7 @@ import java.util.Scanner;
  *
  * @author Ole-martin Steinnes
  */
-public class MotorController{
+public class MotorController extends Thread {
 
 
     private boolean run = true;
@@ -27,7 +27,7 @@ public class MotorController{
     /**
      * Constructor of the MotorController
      */
-    public MotorController() {
+    public MotorController(){
         setUpFields();
         setUpConnection();
     }
