@@ -59,7 +59,7 @@ public class MotorController extends Thread {
 
             if (guiKeyword1.toLowerCase().equals("speed")) {
                 int speed = Integer.parseInt(guiKeyword2);
-                motorCommands.setSpeed(speed);
+                motorCommands.setMotorSpeed(speed);
                 System.out.println("Speed set:" + speed);
             }
 
