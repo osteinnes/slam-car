@@ -6,21 +6,27 @@ import sdv.networking.motor.TcpServer;
 import java.util.Scanner;
 
 /**
- * Controlles motor of the car.
+ * Responsible for motor control. Uses MotorCommands to relay input from GUI-client to Python-server.
  *
  * @author Ole-martin Steinnes
  */
 public class MotorController extends Thread {
 
-
+    // Boolean controlling whether comm-protocol with GUI should run.
     private boolean run = true;
 
-    private TcpClient client;
-    private MotorCommands commands;
-    private TcpServer server;
+    // Object containing the pythonClient
+    private TcpClient pythonClient;
 
-    private String keyword1;
-    private String keyword2;
+    // Object containing the motor motorCommands protocol
+    private MotorCommands motorCommands;
+
+    // Object containing the Python-client
+    private TcpServer guiServer;
+
+    // Keywords from guiClient.
+    private String guiKeyword1;
+    private String guiKeyword2;
 
     private Scanner keyboard;
 
@@ -32,52 +38,55 @@ public class MotorController extends Thread {
         setUpConnection();
     }
 
-
+    /**
+     * Creates a message protocol between GUI-client and Python-server in a new thread.
+     * Enabling the GUI to control motors.
+     */
     public void run() {
         while (run) {
             System.out.println("Entering while");
-            server.messageFromClient();
-            String text = server.clientString;
+            guiServer.messageFromClient();
+            String text = guiServer.clientString;
             // String text = keyboard.nextLine();
-            String[] input = inputParser(text);
+            String[] guiClientInput = inputParser(text);
 
-            if (input.length == 2) {
-                keyword1 = input[0];
-                keyword2 = input[1];
+            if (guiClientInput.length == 2) {
+                guiKeyword1 = guiClientInput[0];
+                guiKeyword2 = guiClientInput[1];
             }
 
-            System.out.println("key1: " + keyword1 + " key2: " + keyword2);
+            System.out.println("key1: " + guiKeyword1 + " key2: " + guiKeyword2);
 
-            if (keyword1.toLowerCase().equals("speed")) {
-                int speed = Integer.parseInt(keyword2);
-                commands.setSpeed(speed);
+            if (guiKeyword1.toLowerCase().equals("speed")) {
+                int speed = Integer.parseInt(guiKeyword2);
+                motorCommands.setSpeed(speed);
                 System.out.println("Speed set:" + speed);
             }
 
             if (text.toLowerCase().trim().equals("getencoder")) {
-                commands.getEncoderData();
-                client.messageFromServer();
-                System.out.println("Encoder1: " + client.response[1]);
-                System.out.println("Encoder2: " + client.response[3]);
+                motorCommands.getEncoderData();
+                pythonClient.messageFromServer();
+                System.out.println("Encoder1: " + pythonClient.response[1]);
+                System.out.println("Encoder2: " + pythonClient.response[3]);
 
             }
-            if (keyword1.toLowerCase().equals("key_pressed") && keyword2.toLowerCase().equals("left")) {
-                commands.turnLeft();
+            if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("left")) {
+                motorCommands.turnLeft();
             }
-            if (keyword1.toLowerCase().equals("key_pressed") && keyword2.toLowerCase().equals("right")) {
-                commands.turnRight();
+            if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("right")) {
+                motorCommands.turnRight();
             }
-            if (keyword1.toLowerCase().equals("key_pressed") && keyword2.toLowerCase().equals("up")) {
-                commands.forward();
+            if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("up")) {
+                motorCommands.forward();
             }
-            if (keyword1.toLowerCase().equals("key_pressed") && keyword2.toLowerCase().equals("down")) {
-                commands.reverse();
+            if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("down")) {
+                motorCommands.reverse();
             }
             if (text.toLowerCase().trim().equals("getspeed")) {
-                client.sendMotorSpeedRequest();
+                pythonClient.sendMotorSpeedRequest();
             }
-            if (keyword1.toLowerCase().equals("key_released")) {
-                commands.stop();
+            if (guiKeyword1.toLowerCase().equals("key_released")) {
+                motorCommands.stop();
             }
             if (text.toLowerCase().trim().equals("exit")) {
                 System.out.println("Shutting down");
@@ -91,12 +100,12 @@ public class MotorController extends Thread {
      * Set up fields for motor controller
      */
     private void setUpFields() {
-        this.client = new TcpClient();
-        this.commands = new MotorCommands(client);
-        this.server = new TcpServer();
+        this.pythonClient = new TcpClient();
+        this.motorCommands = new MotorCommands(pythonClient);
+        this.guiServer = new TcpServer();
 
-        this.keyword1  = "";
-        this.keyword2 = "";
+        this.guiKeyword1 = "";
+        this.guiKeyword2 = "";
 
         this.keyboard = new Scanner(System.in);
     }
@@ -105,33 +114,42 @@ public class MotorController extends Thread {
      * Set up connection for motor control
      */
     private void setUpConnection(){
-        if (!client.connected) {
-            client.connect();
-            System.out.println("Second " + client.connected);
+        if (!pythonClient.connected) {
+            pythonClient.connect();
+            System.out.println("Second " + pythonClient.connected);
         }
 
-        if (!server.connected) {
+        if (!guiServer.connected) {
             System.out.println("Waiting for connection");
-            server.connect();
+            guiServer.connect();
         }
     }
 
+    /**
+     * Parses input keyword from pythonClient (GUI)
+     *
+     * @param keyword from pythonClient (GUI)
+     * @return String-array containing the input from pythonClient split by colon (:)
+     */
     public String[] inputParser(String keyword) {
         return keyword.split(":");
     }
 
-    public MotorCommands getCommands() {
-        return commands;
-    }
-
+    /**
+     * Gets encoder data from the motor controller, using the MotorCommands and TcpClient classes.
+     * Recieves encoder data from Python-guiServer and makes sure that the data recieved is in the correct format.
+     * Furthermore, it returns a string array of encoder values (enc1: int, enc2: int)
+     *
+     * @return a string array of encoder values (enc1: int, enc2: int)
+     */
     public String[] getEncoder() {
         String[] strings;
-        commands.getEncoderData();
-        client.messageFromServer();
-        if (client.response.length == 4) {
-            System.out.println("Encoder1: " + client.response[1]);
-            System.out.println("Encoder2: " + client.response[3]);
-            strings = client.response;
+        motorCommands.getEncoderData();
+        pythonClient.messageFromServer();
+        if (pythonClient.response.length == 4) {
+            System.out.println("Encoder1: " + pythonClient.response[1]);
+            System.out.println("Encoder2: " + pythonClient.response[3]);
+            strings = pythonClient.response;
         } else {
             strings = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
         }
