@@ -98,15 +98,26 @@ public class MovingSlam {
                     scans.addElement(distanceA);
                     ns = scans.size();
                     System.out.println("Scan size: " + ns);
+
+                    // Encoder one ande two from motor controller.
                     int enc1, enc2;
 
+                    // String array that holds encoder values.
                     String[] strings = motorController.getEncoder();
+
+                    // If strings do not contain "no response" we know strings contain
+                    // proper encoder values. Hence, we assign them to PoseChange-object.
                     if (!strings[1].equalsIgnoreCase("no response")) {
+
+                        // encoder values
                         String encoder1 = strings[1];
                         String encoder2 = strings[3];
+
+                        // Parsing encoder values from String to int.
                         enc1 = Integer.parseInt(encoder1);
                         enc2 = Integer.parseInt(encoder2);
 
+                        // Computing PoseChange through abstract Robot-class.
                         poseChange = robot.computePoseChange(time, enc1 , enc2 );
                     }
 
