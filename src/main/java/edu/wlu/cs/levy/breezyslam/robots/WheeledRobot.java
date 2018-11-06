@@ -80,6 +80,8 @@ public abstract class WheeledRobot
             double left_diff_degrees = odometry.left_wheel_degrees - this.left_wheel_degrees_prev;
             double right_diff_degrees = odometry.right_wheel_degrees - this.right_wheel_degrees_prev;
 
+            System.out.println("Right diff degree:  " + right_diff_degrees + "     --    Left diff degree: " + left_diff_degrees);
+
             dxy_mm =  this.wheel_radius_mm * (java.lang.Math.toRadians(left_diff_degrees) + java.lang.Math.toRadians(right_diff_degrees));
 
             dtheta_degrees = this.wheel_radius_mm / this.half_axle_length_mm * (right_diff_degrees - left_diff_degrees);

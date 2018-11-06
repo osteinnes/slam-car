@@ -38,7 +38,7 @@ public class MovingSlam {
         System.out.println("Past motorcontroller.run()");
 
         // Timer.
-        long time = System.currentTimeMillis();
+        double time = System.currentTimeMillis();
 
         System.out.println("Before try catch");
         try (SweepDevice device = new SweepDevice("/dev/ttyUSB0")) {
@@ -124,12 +124,12 @@ public class MovingSlam {
                         enc1 = Integer.parseInt(encoder1);
                         enc2 = Integer.parseInt(encoder2);
 
-                        System.out.println("PARSE:: " + "ENKODER1: " +enc1  + " -- ENKODER2: " +enc2);
+                        System.out.println("TIME: " + time);
 
 
 
                         // Computing PoseChange through abstract Robot-class.
-                        poseChange = robot.computePoseChange(time, enc1 , enc2 );
+                        poseChange = robot.computePoseChange(System.currentTimeMillis()/10.0, enc1 , enc2 );
                         System.out.println(poseChange.toString());
                         System.out.println("1:: " + poseChange.getDxyMm());
                     }
