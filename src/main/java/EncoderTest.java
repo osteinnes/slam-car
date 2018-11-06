@@ -1,5 +1,6 @@
 import sdv.devices.motor.MotorController;
 
+import java.util.concurrent.*;
 /**
  * Test-class reading encoders of the motor-controller, while the car can be driven from GUI.
  *
@@ -13,7 +14,12 @@ public class EncoderTest {
         motorController.start();
 
         while (true) {
-            motorController.getEncoder();
+            try {
+                TimeUnit.SECONDS.sleep(1);
+                motorController.getEncoder();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

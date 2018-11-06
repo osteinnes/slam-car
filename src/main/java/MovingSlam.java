@@ -32,15 +32,17 @@ public class MovingSlam {
         MotorController motorController = new MotorController();
 
 
-        motorController.run();
+        motorController.start();
 
 
-
+        System.out.println("Past motorcontroller.run()");
 
         // Timer.
         long time = System.currentTimeMillis();
 
+        System.out.println("Before try catch");
         try (SweepDevice device = new SweepDevice("/dev/ttyUSB0")) {
+            System.out.println("In try");
             int speed = device.getMotorSpeed();
             int rate = device.getSampleRate();
             int HOLE_WIDTH_MM = 200;
@@ -73,20 +75,20 @@ public class MovingSlam {
             Position position = slam.getpos();
             System.out.println("Position: " + position);
             for (List<SweepSample> s : device.scans()) {
-                System.err.println(s);
+                //System.err.println(s);
 
                 SweepSample sample = s.get(0);
 
                 int distance = sample.getDistance();
 
-                System.out.println(s.size());
+                //System.out.println(s.size());
 
                 int[] distanceA = new int[1060];
 
                 Vector<int[]> scans = new Vector<int[]>();
 
                 if (s.size() > 1059) {
-                    System.out.println(s.size());
+                    //System.out.println(s.size());
                     for (int i = 0; i <= 1059; i++) {
                         int dist = s.get(i).getDistance();
                         //  System.out.println("Dist(i): " + dist);
@@ -97,7 +99,7 @@ public class MovingSlam {
                     //  scans.add(distanceA);
                     scans.addElement(distanceA);
                     ns = scans.size();
-                    System.out.println("Scan size: " + ns);
+                    //System.out.println("Scan size: " + ns);
 
                     // Encoder one ande two from motor controller.
                     int enc1, enc2;
@@ -123,10 +125,10 @@ public class MovingSlam {
 
                     for (int x = 0; x < ns; x++) {
                         int[] scan = scans.elementAt(x);
-                        System.out.println("Element in scan: " + Arrays.toString(scan));
-                        System.out.println(poseChange.getDxyMm() + poseChange.getDtSeconds() + poseChange.getDthetaDegrees());
+                        //System.out.println("Element in scan: " + Arrays.toString(scan));
+                        System.out.println("dxy_mm: " + poseChange.getDxyMm() + " dtSeconds: " + poseChange.getDtSeconds() + " thetaDegrees: " + poseChange.getDthetaDegrees());
                         slam.update(scan, poseChange);
-                        System.out.println("Slam updated!");
+                        //System.out.println("Slam updated!");
                     }
                 }
 
