@@ -69,6 +69,13 @@ public class MotorCommands {
         Client.setForwardMotor1Speed(0);
         System.out.println("STOP REQUEST SENT");
     }
+    /**
+     * Fetches encoder data for left and right encoder from Python server.
+     */
+    public void getEncoderData(){
+        Client.sendEncoderRequest();
+        System.out.println("ENCODERDATA REQUEST SENT");
+    }
 
     /**
      * Returns speed of the car.

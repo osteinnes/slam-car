@@ -17,6 +17,7 @@ public class TcpClient {
     BufferedReader in;
     // Output to server.
     PrintWriter pw;
+    public String[] response;
 
 
     /**
@@ -26,7 +27,7 @@ public class TcpClient {
         connected = false;
     }
 
-    /**
+    /**replaceAll
      * Connects to the local Python-server.
      *
      * Returns connected status
@@ -53,7 +54,8 @@ public class TcpClient {
         try {
                      serverResponse = in.readLine();
                       if(serverResponse != null) {
-                          serverResponse = serverResponse.replaceAll("\\p{P}","");
+                         // serverResponse = serverResponse.replaceAll("\\p{P}","");
+                          response = serverResponse.split(":");
                           System.out.println("From server " + serverResponse);
                       }
                       else{

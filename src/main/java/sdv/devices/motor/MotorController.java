@@ -59,10 +59,11 @@ public class MotorController {
             }
 
             if (text.toLowerCase().trim().equals("getencoder")) {
-                for (int i = 0; i < 10; i++) {
-                    client.sendEncoderRequest();
-                    System.out.println("Request sent. Waiting for response");
-                }
+                commands.getEncoderData();
+                client.messageFromServer();
+                System.out.println("Encoder1: " + client.response[1]);
+                System.out.println("Encoder2: " + client.response[3]);
+
             }
             if (keyword1.toLowerCase().equals("key_pressed") && keyword2.toLowerCase().equals("left")) {
                 commands.turnLeft();
