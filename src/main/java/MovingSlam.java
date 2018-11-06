@@ -6,5 +6,7 @@ public class MovingSlam {
 
 
         motorController.run();
+
+        motorController.getEncoder();
     }
 }

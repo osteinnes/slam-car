@@ -119,4 +119,17 @@ public class MotorController{
     public String[] inputParser(String keyword) {
         return keyword.split(":");
     }
+
+    public MotorCommands getCommands() {
+        return commands;
+    }
+
+    public String[] getEncoder() {
+        commands.getEncoderData();
+        client.messageFromServer();
+        System.out.println("Encoder1: " + client.response[1]);
+        System.out.println("Encoder2: " + client.response[3]);
+
+        return client.response;
+    }
 }
