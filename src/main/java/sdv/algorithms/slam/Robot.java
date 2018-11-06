@@ -26,8 +26,15 @@ public class Robot extends WheeledRobot{
     protected WheelOdometry extractOdometry(double timestamp, double left_wheel_odometry, double right_wheel_odometry) {
 
         // Calculating the degrees of the wheels based on encoder data.
-        double left_wheel_degrees = left_wheel_odometry * (360.0/8400.0);
-        double right_wheel_degrees = right_wheel_odometry * (360.0/8400.0);
+        //double left_wheel_degrees = left_wheel_odometry * (360.0/8400.0);
+        //double right_wheel_degrees = right_wheel_odometry * (360.0/8400.0);
+
+        double left_wheel_radians = (java.lang.Math.toRadians(Math.abs(left_wheel_odometry)*((2*Math.PI)/8400.0))) % (2*Math.PI);
+        double right_wheel_radians = (java.lang.Math.toRadians(Math.abs(right_wheel_odometry))*((2*Math.PI)/8400.0)) % (2*Math.PI);
+
+
+        double left_wheel_degrees = (360/(2*Math.PI))*left_wheel_radians;
+        double right_wheel_degrees = (360/(2*Math.PI))*right_wheel_radians;
 
         // Time since start.
         double timestamp_seconds = timestamp;

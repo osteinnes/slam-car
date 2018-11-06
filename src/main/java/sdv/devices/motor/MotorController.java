@@ -155,7 +155,7 @@ public class MotorController extends Thread {
         String[] strings;
         motorCommands2.getEncoderData();
         pythonClient2.messageFromServer();
-        if (pythonClient2.response[1].contains("FAILED") || pythonClient2.response[3].contains("FAILED")) {
+        if (!pythonClient2.response[1].contains("FAILED") || !pythonClient2.response[3].contains("FAILED")) {
             System.out.println("Encoder1: " + pythonClient2.response[1]);
             System.out.println("Encoder2: " + pythonClient2.response[3]);
             strings = pythonClient2.response;

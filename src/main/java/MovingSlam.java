@@ -70,7 +70,7 @@ public class MovingSlam {
                     1, 0.1);
 
 
-            slam = new RMHCSLAM(myLidar, 820, 10, HOLE_WIDTH_MM);
+            slam = new RMHCSLAM(myLidar, 820, 40, HOLE_WIDTH_MM);
 
             Position position = slam.getpos();
             System.out.println("Position: " + position);
@@ -106,24 +106,32 @@ public class MovingSlam {
 
                     // String array that holds encoder values.
                     String[] strings = motorController.getEncoder();
-
+                    System.out.println("Before IF");
+                    System.out.println("Strings: " + strings[1]);
                     // If strings do not contain "no response" we know strings contain
                     // proper encoder values. Hence, we assign them to PoseChange-object.
                     if (!strings[1].equalsIgnoreCase("no response")) {
+                        System.out.println("In IF");
 
                         // encoder values
                         String encoder1 = strings[1];
                         String encoder2 = strings[3];
 
+                        System.out.println("SLAMMM:: " + "ENKODER1: " +encoder1  + " -- ENKODER2: " +encoder2);
+
+
                         // Parsing encoder values from String to int.
                         enc1 = Integer.parseInt(encoder1);
                         enc2 = Integer.parseInt(encoder2);
 
-                        double timed = (double) time;
+                        System.out.println("PARSE:: " + "ENKODER1: " +enc1  + " -- ENKODER2: " +enc2);
+
+
 
                         // Computing PoseChange through abstract Robot-class.
-                        poseChange = robot.computePoseChange(timed, enc1 , enc2 );
+                        poseChange = robot.computePoseChange(time, enc1 , enc2 );
                         System.out.println(poseChange.toString());
+                        System.out.println("1:: " + poseChange.getDxyMm());
                     }
 
                     for (int x = 0; x < ns; x++) {
@@ -131,6 +139,8 @@ public class MovingSlam {
                         //System.out.println("Element in scan: " + Arrays.toString(scan));
                         //System.out.println("dxy_mm: " + poseChange.getDxyMm() + " dtSeconds: " + poseChange.getDtSeconds() + " thetaDegrees: " + poseChange.getDthetaDegrees());
                         slam.update(scan, poseChange);
+                        position = slam.getpos();
+                        System.out.println("Position: " + position);
                         //System.out.println("Slam updated!");
                     }
                 }
