@@ -34,6 +34,7 @@ public class MotorController{
 
 
     public void run() {
+        while (run) {
             System.out.println("Entering while");
             server.messageFromClient();
             String text = server.clientString;
@@ -74,15 +75,15 @@ public class MotorController{
             if (text.toLowerCase().trim().equals("getspeed")) {
                 client.sendMotorSpeedRequest();
             }
-            if (keyword1.toLowerCase().equals("key_released")){
+            if (keyword1.toLowerCase().equals("key_released")) {
                 commands.stop();
             }
             if (text.toLowerCase().trim().equals("exit")) {
                 System.out.println("Shutting down");
                 run = false;
             }
-
         }
+    }
 
 
     /**
