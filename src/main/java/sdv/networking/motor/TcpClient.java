@@ -37,7 +37,7 @@ public class TcpClient {
         try {
             if(!connected) {
                 Socket clientSocket = new Socket("localhost", 2004);
-                System.out.println("Connected to serever at " + clientSocket.getRemoteSocketAddress());
+                System.out.println("Connected to server at " + clientSocket.getRemoteSocketAddress());
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 pw = new PrintWriter(clientSocket.getOutputStream(), true);
                 connected = true;

@@ -10,7 +10,7 @@ import java.util.Scanner;
  *
  * @author Ole-martin Steinnes
  */
-public class MotorController {
+public class MotorController{
 
 
     private boolean run = true;
@@ -24,10 +24,6 @@ public class MotorController {
 
     private Scanner keyboard;
 
-    public static String[] inputParser(String keyword) {
-        return keyword.split(":");
-    }
-
     /**
      * Constructor of the MotorController
      */
@@ -37,7 +33,7 @@ public class MotorController {
     }
 
 
-    public void runMotorControl() {
+    public void run() {
         while (run) {
             System.out.println("Entering while");
             server.messageFromClient();
@@ -80,16 +76,16 @@ public class MotorController {
             if (text.toLowerCase().trim().equals("getspeed")) {
                 client.sendMotorSpeedRequest();
             }
-            if (keyword1.toLowerCase().equals("key_released")){
+            if (keyword1.toLowerCase().equals("key_released")) {
                 commands.stop();
             }
             if (text.toLowerCase().trim().equals("exit")) {
                 System.out.println("Shutting down");
                 run = false;
             }
-
         }
     }
+
 
     /**
      * Set up fields for motor controller
@@ -118,5 +114,9 @@ public class MotorController {
             System.out.println("Waiting for connection");
             server.connect();
         }
+    }
+
+    public String[] inputParser(String keyword) {
+        return keyword.split(":");
     }
 }
