@@ -17,9 +17,11 @@ public class MotorController extends Thread {
 
     // Object containing the pythonClient
     private TcpClient pythonClient;
+    private TcpClient pythonClient2;
 
     // Object containing the motor motorCommands protocol
     private MotorCommands motorCommands;
+    private MotorCommands motorCommands2;
 
     // Object containing the Python-client
     private TcpServer guiServer;
@@ -101,7 +103,9 @@ public class MotorController extends Thread {
      */
     private void setUpFields() {
         this.pythonClient = new TcpClient();
+        this.pythonClient2 = new TcpClient();
         this.motorCommands = new MotorCommands(pythonClient);
+        this.motorCommands2 = new MotorCommands(pythonClient2);
         this.guiServer = new TcpServer();
 
         this.guiKeyword1 = "";
@@ -117,6 +121,11 @@ public class MotorController extends Thread {
         if (!pythonClient.connected) {
             pythonClient.connect();
             System.out.println("Second " + pythonClient.connected);
+        }
+
+        if (!pythonClient2.connected) {
+            pythonClient2.connect();
+            System.out.println("Third " + pythonClient2.connected);
         }
 
         if (!guiServer.connected) {
@@ -144,12 +153,12 @@ public class MotorController extends Thread {
      */
     public String[] getEncoder() {
         String[] strings;
-        motorCommands.getEncoderData();
-        pythonClient.messageFromServer();
-        if (pythonClient.response.length == 4) {
-            System.out.println("Encoder1: " + pythonClient.response[1]);
-            System.out.println("Encoder2: " + pythonClient.response[3]);
-            strings = pythonClient.response;
+        motorCommands2.getEncoderData();
+        pythonClient2.messageFromServer();
+        if (pythonClient2.response.length == 4) {
+            System.out.println("Encoder1: " + pythonClient2.response[1]);
+            System.out.println("Encoder2: " + pythonClient2.response[3]);
+            strings = pythonClient2.response;
         } else {
             strings = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
         }
