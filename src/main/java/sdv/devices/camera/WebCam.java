@@ -25,7 +25,7 @@ public class WebCam {
      * Readies the web-cam.
      */
     private void doSetupWebcam() {
-        this.webcam = Webcam.getWebcams().get(0);
+        this.webcam = Webcam.getDefault();
 
         if (null != this.webcam) {
             System.out.println(this.webcam.getDevice().getName());

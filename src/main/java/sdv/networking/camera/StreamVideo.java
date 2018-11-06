@@ -46,8 +46,10 @@ public class StreamVideo {
      */
     public void doConnect() {
         try {
-            this.socket.connect(this.socket.getRemoteSocketAddress());
-        } catch (SocketException e) {
+
+                this.socket.connect(InetAddress.getByName("192.168.0.101"), 9000);
+
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }
