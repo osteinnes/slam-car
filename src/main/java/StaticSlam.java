@@ -1,6 +1,11 @@
 import sdv.algorithms.slam.Slam;
 import sdv.sensors.lidar.Lidar;
 
+/**
+ * Test-class that tests SLAMM while car is standing still.
+ *
+ * @author Ole-martin Steinnes
+ */
 public class StaticSlam {
     public static void main(String[] args) {
 

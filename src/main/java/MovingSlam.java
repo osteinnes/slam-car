@@ -15,6 +15,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * Test-class that test SLAM with a moving car that gives us encoder-data as odometry.
+ *
+ * @author Ole-martin Steinnes
+ */
 public class MovingSlam {
 
     private static int MAP_SIZE_PIXELS = 820;
