@@ -125,11 +125,16 @@ public class MotorController extends Thread {
     }
 
     public String[] getEncoder() {
+        String[] strings;
         commands.getEncoderData();
         client.messageFromServer();
-        System.out.println("Encoder1: " + client.response[1]);
-        System.out.println("Encoder2: " + client.response[3]);
-
-        return client.response;
+        if (client.response.length == 4) {
+            System.out.println("Encoder1: " + client.response[1]);
+            System.out.println("Encoder2: " + client.response[3]);
+            strings = client.response;
+        } else {
+            strings = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
+        }
+        return strings;
     }
 }

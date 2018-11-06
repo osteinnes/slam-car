@@ -98,13 +98,18 @@ public class MovingSlam {
                     scans.addElement(distanceA);
                     ns = scans.size();
                     System.out.println("Scan size: " + ns);
+                    int enc1, enc2;
 
                     String[] strings = motorController.getEncoder();
-                    String encoder1 = strings[1];
-                    String encoder2 = strings[3];
-                    int enc1 = Integer.parseInt(encoder1);
-                    int enc2 = Integer.parseInt(encoder2);
-                    poseChange = robot.computePoseChange(time, enc1 , enc2 );
+                    if (!strings[1].equalsIgnoreCase("no response")) {
+                        String encoder1 = strings[1];
+                        String encoder2 = strings[3];
+                        enc1 = Integer.parseInt(encoder1);
+                        enc2 = Integer.parseInt(encoder2);
+
+                        poseChange = robot.computePoseChange(time, enc1 , enc2 );
+                    }
+
                     for (int x = 0; x < ns; x++) {
                         int[] scan = scans.elementAt(x);
                         System.out.println("Element in scan: " + Arrays.toString(scan));
