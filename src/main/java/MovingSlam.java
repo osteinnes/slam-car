@@ -119,14 +119,17 @@ public class MovingSlam {
                         enc1 = Integer.parseInt(encoder1);
                         enc2 = Integer.parseInt(encoder2);
 
+                        double timed = (double) time;
+
                         // Computing PoseChange through abstract Robot-class.
-                        poseChange = robot.computePoseChange(time, enc1 , enc2 );
+                        poseChange = robot.computePoseChange(timed, enc1 , enc2 );
+                        System.out.println(poseChange.toString());
                     }
 
                     for (int x = 0; x < ns; x++) {
                         int[] scan = scans.elementAt(x);
                         //System.out.println("Element in scan: " + Arrays.toString(scan));
-                        System.out.println("dxy_mm: " + poseChange.getDxyMm() + " dtSeconds: " + poseChange.getDtSeconds() + " thetaDegrees: " + poseChange.getDthetaDegrees());
+                        //System.out.println("dxy_mm: " + poseChange.getDxyMm() + " dtSeconds: " + poseChange.getDtSeconds() + " thetaDegrees: " + poseChange.getDthetaDegrees());
                         slam.update(scan, poseChange);
                         //System.out.println("Slam updated!");
                     }
