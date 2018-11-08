@@ -145,7 +145,7 @@ public class MovingSlam {
                     }
                 }
 
-                if(time + 60000 < System.currentTimeMillis()) {
+                if(time + (60000*7) < System.currentTimeMillis()) {
 
                     break;
                 }
