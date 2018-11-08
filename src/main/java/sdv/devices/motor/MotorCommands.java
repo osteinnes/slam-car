@@ -24,18 +24,18 @@ public class MotorCommands {
     }
 
     /**
-     * Turn the car left. Sends corresponding commands to the Python-server,
+     * Turn the car right. Sends corresponding commands to the Python-server,
      */
-    public void turnLeft(){
+    public void turnRight(){
         pythonClient.setBackwardMotor2Speed(motorSpeed);
         pythonClient.setForwardMotor1Speed(motorSpeed);
         System.out.println("TURN LEFT REQUEST SENT.");
     }
 
     /**
-     * Turn the car right. Sends corresponding commands to the Python-server
+     * Turn the car left. Sends corresponding commands to the Python-server
      */
-    public void turnRight(){
+    public void turnLeft(){
         pythonClient.setForwardMotor2Speed(motorSpeed);
         pythonClient.setBackwardMotor1Speed(motorSpeed);
         System.out.println("TURN RIGHT REQUEST SENT.");

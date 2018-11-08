@@ -87,6 +87,7 @@ public abstract class WheeledRobot
             dtheta_degrees = this.wheel_radius_mm / this.half_axle_length_mm * (right_diff_degrees - left_diff_degrees);
 
             dt_seconds = odometry.timestamp_seconds - this.timestamp_seconds_prev;
+
         }
 
         // Store current odometry for next time
