@@ -51,7 +51,7 @@ public class MovingSlam {
             int HOLE_WIDTH_MM = 200;
             int ns = 0;
 
-            device.setMotorSpeed(2);
+            device.setMotorSpeed(1);
             device.setSampleRate(1000);
 
             System.out.println(String.format("Motor Speed: %s Hz", speed));
@@ -68,7 +68,7 @@ public class MovingSlam {
             robot = new Robot(120, 170);
             poseChange = new PoseChange();
 
-            myLidar = new Laser(530, 1000,
+            myLidar = new Laser(1060, 1000,
                     360, 1,
                     1, 0.1);
 
@@ -87,13 +87,13 @@ public class MovingSlam {
 
                 //System.out.println(s.size());
 
-                int[] distanceA = new int[530];
+                int[] distanceA = new int[1060];
 
                 Vector<int[]> scans = new Vector<int[]>();
 
-                if (s.size() > 529) {
+                if (s.size() > 1059) {
                     //System.out.println(s.size());
-                    for (int i = 0; i <= 529; i++) {
+                    for (int i = 0; i <= 1059; i++) {
                         int dist = s.get(i).getDistance();
                         //  System.out.println("Dist(i): " + dist);
                         distanceA[i] = dist * 10;
@@ -121,7 +121,7 @@ public class MovingSlam {
                         String encoder1 = strings[1];
                         String encoder2 = strings[3];
 
-                     //   System.out.println("SLAMMM:: " + "ENKODER1: " +encoder1  + " -- ENKODER2: " +encoder2);
+                        //System.out.println("ENKODER1: " +encoder1  + " -- ENKODER2: " +encoder2);
 
 
                         // Parsing encoder values from String to int.
@@ -143,12 +143,12 @@ public class MovingSlam {
                         //System.out.println("dxy_mm: " + poseChange.getDxyMm() + " dtSeconds: " + poseChange.getDtSeconds() + " thetaDegrees: " + poseChange.getDthetaDegrees());
                         slam.update(scan, poseChange);
                         position = slam.getpos();
-                       // System.out.println("Position: " + position);
+                        System.out.println("Position: " + position);
                         //System.out.println("Slam updated!");
                     }
                 }
 
-                if(firstTime + (300000) < System.currentTimeMillis()) {
+                if(firstTime + (120000) < System.currentTimeMillis()) {
 
                     break;
                 }

@@ -14,15 +14,12 @@ public class MotorCommands {
     // Desired motorSpeed of motors.
     private int motorSpeed;
 
-    private int turningSpeed;
-
     /**
      * Constructor of the MotorCommands class. Sets motorSpeed to 0 (until user input) and sets client.
      * @param client Tcp-client of the Python server.
      */
     public MotorCommands(TcpClient client){
-        motorSpeed = 0;
-        this.turningSpeed = 16;
+        motorSpeed = 32;
         this.pythonClient = client;
     }
 
@@ -30,8 +27,8 @@ public class MotorCommands {
      * Turn the car right. Sends corresponding commands to the Python-server,
      */
     public void turnRight(){
-        pythonClient.setBackwardMotor2Speed(turningSpeed);
-        pythonClient.setForwardMotor1Speed(turningSpeed);
+        pythonClient.setBackwardMotor2Speed(motorSpeed);
+        pythonClient.setForwardMotor1Speed(motorSpeed);
         //System.out.println("TURN LEFT REQUEST SENT.");
     }
 
@@ -39,8 +36,8 @@ public class MotorCommands {
      * Turn the car left. Sends corresponding commands to the Python-server
      */
     public void turnLeft(){
-        pythonClient.setForwardMotor2Speed(turningSpeed);
-        pythonClient.setBackwardMotor1Speed(turningSpeed);
+        pythonClient.setForwardMotor2Speed(motorSpeed);
+        pythonClient.setBackwardMotor1Speed(motorSpeed);
         //System.out.println("TURN RIGHT REQUEST SENT.");
     }
 

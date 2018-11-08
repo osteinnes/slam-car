@@ -46,7 +46,7 @@ public class MotorController extends Thread {
      */
     public void run() {
         while (run) {
-            System.out.println("Entering while");
+            //System.out.println("Entering while");
             guiServer.messageFromClient();
             String text = guiServer.clientString;
             // String text = keyboard.nextLine();
@@ -57,7 +57,7 @@ public class MotorController extends Thread {
                 guiKeyword2 = guiClientInput[1];
             }
 
-            System.out.println("key1: " + guiKeyword1 + " key2: " + guiKeyword2);
+            //System.out.println("key1: " + guiKeyword1 + " key2: " + guiKeyword2);
 
             if (guiKeyword1.toLowerCase().equals("speed")) {
                 int speed = Integer.parseInt(guiKeyword2);
