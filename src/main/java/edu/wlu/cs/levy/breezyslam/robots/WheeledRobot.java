@@ -77,32 +77,31 @@ public abstract class WheeledRobot
 
         if (this.timestamp_seconds_prev > 0)
         {             
-            double left_diff_degrees = odometry.left_wheel_degrees - this.left_wheel_degrees_prev;
-            double right_diff_degrees = odometry.right_wheel_degrees - this.right_wheel_degrees_prev;
+            //double left_diff_degrees = odometry.left_wheel_degrees - this.left_wheel_degrees_prev;
+            //double right_diff_degrees = odometry.right_wheel_degrees - this.right_wheel_degrees_prev;
 
-            if (left_diff_degrees > 300.0) {
+            // Calculate differnece angle left side
+            double phi_left = Math.abs(odometry.left_wheel_degrees - this.left_wheel_degrees_prev) % 360.00;       // This is either the distance or 360 - distance
+            double distance_left = phi_left > 180.00 ? 360.00 - phi_left : phi_left;
 
-                left_diff_degrees = left_diff_degrees - 360.0;
+            int sign_left = (odometry.left_wheel_degrees - this.left_wheel_degrees_prev >= 0 && odometry.left_wheel_degrees - this.left_wheel_degrees_prev <= 180) || (odometry.left_wheel_degrees - this.left_wheel_degrees_prev <= -180 && odometry.left_wheel_degrees- this.left_wheel_degrees_prev>= -360) ? 1 : -1;
 
-            } else if(left_diff_degrees < -300.0) {
+            double left_diff_degrees = distance_left*sign_left;
 
-                left_diff_degrees = left_diff_degrees + 360.0;
+            // Calculate differnece angle right side
+            double phi_right = Math.abs(odometry.right_wheel_degrees - this.right_wheel_degrees_prev) % 360.00;       // This is either the distance or 360 - distance
+            double distance_right = phi_right > 180.00 ? 360.00 - phi_right : phi_right;
 
-            } else if (right_diff_degrees > 300.0) {
+            int sign_right = (odometry.right_wheel_degrees - this.right_wheel_degrees_prev >= 0 && odometry.right_wheel_degrees - this.right_wheel_degrees_prev <= 180) || (odometry.right_wheel_degrees - this.right_wheel_degrees_prev <= -180 && odometry.right_wheel_degrees- this.right_wheel_degrees_prev>= -360) ? 1 : -1;
 
-                right_diff_degrees = right_diff_degrees - 360.0;
+            double right_diff_degrees = distance_right*sign_right;
 
-            } else if (right_diff_degrees < -300.0) {
+            System.out.println("Left diff degree: " + left_diff_degrees  + "  --   Right diff degree:  " + right_diff_degrees  );
+            System.out.println();
 
-                right_diff_degrees = right_diff_degrees + 360.0;
+            dxy_mm =  this.wheel_radius_mm * (Math.toRadians(left_diff_degrees) + Math.toRadians(right_diff_degrees));
 
-            }
-
-            //System.out.println("Right diff degree:  " + right_diff_degrees + "     --    Left diff degree: " + left_diff_degrees);
-
-            dxy_mm =  this.wheel_radius_mm * (java.lang.Math.toRadians(left_diff_degrees) + java.lang.Math.toRadians(right_diff_degrees));
-
-            dtheta_degrees = this.wheel_radius_mm / this.half_axle_length_mm * (right_diff_degrees - left_diff_degrees);
+            dtheta_degrees = (this.wheel_radius_mm / this.half_axle_length_mm) * (right_diff_degrees - left_diff_degrees);
 
             dt_seconds = odometry.timestamp_seconds - this.timestamp_seconds_prev;
 
