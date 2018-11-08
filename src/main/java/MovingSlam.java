@@ -133,7 +133,7 @@ public class MovingSlam {
 
                         // Computing PoseChange through abstract Robot-class.
                         poseChange = robot.computePoseChange(((System.currentTimeMillis())-firstTime)/1000.0, enc1 , enc2 );
-                        System.out.println(poseChange.toString());
+                        //System.out.println(poseChange.toString());
                        // System.out.println("1:: " + poseChange.getDxyMm());
                     }
 

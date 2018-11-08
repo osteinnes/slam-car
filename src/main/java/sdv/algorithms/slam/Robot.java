@@ -38,10 +38,10 @@ public class Robot extends WheeledRobot{
         //double left_wheel_degrees = (360/(2*Math.PI))*left_wheel_radians;
         //double right_wheel_degrees = (360/(2*Math.PI))*right_wheel_radians;
 
-        double left_wheel_degrees = ((360/(8400.0))*left_wheel_odometry) % 8400;
-        double right_wheel_degrees = ((360/(8400.0))*right_wheel_odometry) % 8400;
+        double left_wheel_degrees = ((360.0/8400.0)*Math.abs(left_wheel_odometry)) % 360.0;
+        double right_wheel_degrees = ((360.0/8400.0)*Math.abs(right_wheel_odometry)) % 360.0;
 
-        //System.out.println("Left_wheel_degrees: " + left_wheel_degrees + " -- Right_wheel_degrees: " + right_wheel_degrees);
+        System.out.println("Left_wheel_degrees: " + left_wheel_degrees + " -- Right_wheel_degrees: " + right_wheel_degrees);
 
         //System.out.println("Left degrees: " + left_wheel_degrees + "  --   Right degrees: " + right_wheel_degrees);
 
