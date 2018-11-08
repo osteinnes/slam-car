@@ -64,7 +64,7 @@ public class TcpServer {
             clientRequest = inFromClient.readLine();
             if(clientRequest != null){
                 clientString = clientRequest;
-                System.out.println("Received: " + clientString);
+                //System.out.println("Received: " + clientString);
             }
             else {
                 clientString = "";

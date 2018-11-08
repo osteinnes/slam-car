@@ -56,7 +56,7 @@ public class TcpClient {
                       if(serverResponse != null) {
                          // serverResponse = serverResponse.replaceAll("\\p{P}","");
                           response = serverResponse.split(":");
-                          System.out.println("From server " + serverResponse);
+                          //System.out.println("From server " + serverResponse);
                       }
                       else{
                           System.out.println("No response");
@@ -71,7 +71,7 @@ public class TcpClient {
      * Sends request to get encoder data to the server
      */
     public void sendEncoderRequest() {
-        System.out.println("Sending Encoder Request to Server");
+        //System.out.println("Sending Encoder Request to Server");
         pw.println("getEncoderData");
     }
 
@@ -79,7 +79,7 @@ public class TcpClient {
      * Sends request to get motor speed from the server.
      */
     public void sendMotorSpeedRequest(){
-        System.out.println("Sending Motorspeed Request");
+        //System.out.println("Sending Motorspeed Request");
         pw.println("getMotorSpeed");
     }
 
@@ -90,9 +90,9 @@ public class TcpClient {
      * @param motor1Speed desired speed for motor 1
      */
     public void setForwardMotor1Speed(int motor1Speed){
-        System.out.println("Sending Set Motorspeed Request");
+        //System.out.println("Sending Set Motorspeed Request");
         String payload = "setforwardspeedmotorone." + "motorone:" + motor1Speed;
-        System.out.println(payload);
+        //System.out.println(payload);
         pw.println(payload);
     }
 
@@ -103,9 +103,9 @@ public class TcpClient {
      * @param motor2Speed desired speed for motor 2
      */
     public void setForwardMotor2Speed(int motor2Speed){
-        System.out.println("Sending Set Motorspeed Request");
+        //System.out.println("Sending Set Motorspeed Request");
         String payload = "setforwardspeedmotortwo." + "motortwo:" + motor2Speed;
-        System.out.println(payload);
+        //System.out.println(payload);
         pw.println(payload);
     }
 
@@ -116,9 +116,9 @@ public class TcpClient {
      * @param motor1Speed desired speed for Motor 1
      */
     public void setBackwardMotor1Speed(int motor1Speed){
-        System.out.println("Sending Set Motorspeed Request");
+        //System.out.println("Sending Set Motorspeed Request");
         String payload = "setbackwardspeedmotorone." + "motorone:" + motor1Speed;
-        System.out.println(payload);
+        //System.out.println(payload);
         pw.println(payload);
     }
 
@@ -129,9 +129,9 @@ public class TcpClient {
      * @param motor2Speed desired speed for motor 2
      */
     public void setBackwardMotor2Speed(int motor2Speed){
-        System.out.println("Sending Set Motorspeed Request");
+        //System.out.println("Sending Set Motorspeed Request");
         String payload = "setbackwardspeedmotortwo." + "motortwo:" + motor2Speed;
-        System.out.println(payload);
+        //System.out.println(payload);
         pw.println(payload);
     }
 

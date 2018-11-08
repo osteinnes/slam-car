@@ -62,14 +62,14 @@ public class MotorController extends Thread {
             if (guiKeyword1.toLowerCase().equals("speed")) {
                 int speed = Integer.parseInt(guiKeyword2);
                 motorCommands.setMotorSpeed(speed);
-                System.out.println("Speed set:" + speed);
+                //System.out.println("Speed set:" + speed);
             }
 
             if (text.toLowerCase().trim().equals("getencoder")) {
                 motorCommands.getEncoderData();
                 pythonClient.messageFromServer();
-                System.out.println("Encoder1: " + pythonClient.response[1]);
-                System.out.println("Encoder2: " + pythonClient.response[3]);
+                //System.out.println("Encoder1: " + pythonClient.response[1]);
+                //System.out.println("Encoder2: " + pythonClient.response[3]);
 
             }
             if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("left")) {
@@ -120,12 +120,12 @@ public class MotorController extends Thread {
     private void setUpConnection(){
         if (!pythonClient.connected) {
             pythonClient.connect();
-            System.out.println("Second " + pythonClient.connected);
+            //System.out.println("Second " + pythonClient.connected);
         }
 
         if (!pythonClient2.connected) {
             pythonClient2.connect();
-            System.out.println("Third " + pythonClient2.connected);
+            //System.out.println("Third " + pythonClient2.connected);
         }
 
         if (!guiServer.connected) {
@@ -156,8 +156,8 @@ public class MotorController extends Thread {
         motorCommands2.getEncoderData();
         pythonClient2.messageFromServer();
         if (!pythonClient2.response[1].contains("FAILED") && !pythonClient2.response[3].contains("FAILED")) {
-            System.out.println("Encoder1: " + pythonClient2.response[1]);
-            System.out.println("Encoder2: " + pythonClient2.response[3]);
+            //System.out.println("Encoder1: " + pythonClient2.response[1]);
+            //System.out.println("Encoder2: " + pythonClient2.response[3]);
             strings = pythonClient2.response;
         } else {
             strings = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};

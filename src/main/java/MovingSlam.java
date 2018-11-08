@@ -85,14 +85,14 @@ public class MovingSlam {
 
                 int distance = sample.getDistance();
 
-                System.out.println(s.size());
+                //System.out.println(s.size());
 
                 int[] distanceA = new int[530];
 
                 Vector<int[]> scans = new Vector<int[]>();
 
                 if (s.size() > 529) {
-                    System.out.println(s.size());
+                    //System.out.println(s.size());
                     for (int i = 0; i <= 529; i++) {
                         int dist = s.get(i).getDistance();
                         //  System.out.println("Dist(i): " + dist);
@@ -133,7 +133,7 @@ public class MovingSlam {
 
                         // Computing PoseChange through abstract Robot-class.
                         poseChange = robot.computePoseChange(((System.currentTimeMillis())-firstTime)/1000.0, enc1 , enc2 );
-                       // System.out.println(poseChange.toString());
+                        System.out.println(poseChange.toString());
                        // System.out.println("1:: " + poseChange.getDxyMm());
                     }
 
@@ -148,7 +148,7 @@ public class MovingSlam {
                     }
                 }
 
-                if(firstTime + (3*60000) < System.currentTimeMillis()) {
+                if(firstTime + (300000) < System.currentTimeMillis()) {
 
                     break;
                 }
