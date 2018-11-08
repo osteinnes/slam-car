@@ -6,6 +6,7 @@ import edu.wlu.cs.levy.breezyslam.robots.WheeledRobot;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
 import sdv.algorithms.slam.Robot;
+import sdv.devices.camera.RunWebcamera;
 import sdv.devices.motor.MotorController;
 
 import java.io.BufferedWriter;
@@ -30,8 +31,9 @@ public class MovingSlam {
 
     public static void main(String[] args) {
         MotorController motorController = new MotorController();
+        RunWebcamera WebCam = new RunWebcamera();
 
-
+        WebCam.start();
         motorController.start();
 
 
@@ -48,7 +50,7 @@ public class MovingSlam {
             int HOLE_WIDTH_MM = 200;
             int ns = 0;
 
-            device.setMotorSpeed(1);
+            device.setMotorSpeed(5);
             device.setSampleRate(1000);
 
             System.out.println(String.format("Motor Speed: %s Hz", speed));
@@ -65,7 +67,7 @@ public class MovingSlam {
             robot = new Robot(120, 170);
             poseChange = new PoseChange();
 
-            myLidar = new Laser(1060, 1000,
+            myLidar = new Laser(212, 1000,
                     360, 1,
                     1, 0.1);
 
@@ -87,9 +89,9 @@ public class MovingSlam {
 
                 Vector<int[]> scans = new Vector<int[]>();
 
-                if (s.size() > 1059) {
+                if (s.size() > 211) {
                     //System.out.println(s.size());
-                    for (int i = 0; i <= 1059; i++) {
+                    for (int i = 0; i <= 211; i++) {
                         int dist = s.get(i).getDistance();
                         //  System.out.println("Dist(i): " + dist);
                         distanceA[i] = dist * 10;
