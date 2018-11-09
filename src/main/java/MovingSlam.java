@@ -66,7 +66,7 @@ public class MovingSlam {
             PoseChange poseChange;
             Robot robot;
 
-            robot = new Robot(60, 235);
+            robot = new Robot(30, 180);
             poseChange = new PoseChange();
 
             myLidar = new Laser(530, 1000,
@@ -122,7 +122,11 @@ public class MovingSlam {
                         String encoder1 = strings[1];
                         String encoder2 = strings[3];
 
-                        //System.out.println("ENKODER1: " +encoder1  + " -- ENKODER2: " +encoder2);
+                        System.out.println();
+                        System.out.println();
+                        System.out.println();
+                        System.out.println("ENKODER1: " +encoder1  + " -- ENKODER2: " +encoder2);
+                        System.out.println();
 
 
                         // Parsing encoder values from String to int.

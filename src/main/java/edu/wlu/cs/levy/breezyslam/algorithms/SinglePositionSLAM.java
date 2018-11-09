@@ -69,7 +69,6 @@ public abstract class SinglePositionSLAM extends CoreSLAM
         start_pos.y_mm      += poseChange.getDxyMm() *  this.sintheta();
         start_pos.theta_degrees += poseChange.getDthetaDegrees();
 
-        System.out.println("poseChange.getDthetaDegrees(): " + poseChange.getDthetaDegrees());
         
         // Add offset from laser
         start_pos.x_mm += this.laser.getOffsetMm() * this.costheta();

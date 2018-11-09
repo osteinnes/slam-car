@@ -25,9 +25,11 @@ public class Robot extends WheeledRobot{
     @Override
     protected WheelOdometry extractOdometry(double timestamp, double left_wheel_odometry, double right_wheel_odometry) {
 
+
+
         // Calculating the degrees of the wheels based on encoder data.
-        //double left_wheel_degrees = left_wheel_odometry * (360.0/8400.0);
-        //double right_wheel_degrees = right_wheel_odometry * (360.0/8400.0);
+        //double left_wheel_encoder = left_wheel_odometry * (360.0/8400.0);
+        //double right_wheel_encoder = right_wheel_odometry * (360.0/8400.0);
 
         //double left_wheel_radians = (java.lang.Math.toRadians(Math.abs(left_wheel_odometry)*((2*Math.PI)/8400.0))) % (2*Math.PI);
         //double right_wheel_radians = (java.lang.Math.toRadians(Math.abs(right_wheel_odometry))*((2*Math.PI)/8400.0)) % (2*Math.PI);
@@ -35,21 +37,21 @@ public class Robot extends WheeledRobot{
         //System.out.println("Left_wheel_radians: " + left_wheel_radians + " -- Right_wheel_radians: " + right_wheel_radians);
 
 
-        //double left_wheel_degrees = (360/(2*Math.PI))*left_wheel_radians;
-        //double right_wheel_degrees = (360/(2*Math.PI))*right_wheel_radians;
+        //double left_wheel_encoder = (360/(2*Math.PI))*left_wheel_radians;
+        //double right_wheel_encoder = (360/(2*Math.PI))*right_wheel_radians;
 
-        double left_wheel_degrees = ((360.0/8400.0)*Math.abs(left_wheel_odometry)) % 360.0;
-        double right_wheel_degrees = ((360.0/8400.0)*Math.abs(right_wheel_odometry)) % 360.0;
+        //double left_wheel_encoder = ((360.0/8400.0)*Math.abs(left_wheel_odometry)) % 360.0;
+        //double right_wheel_encoder = ((360.0/8400.0)*Math.abs(right_wheel_odometry)) % 360.0;
 
-        System.out.println("Left_wheel_degrees: " + left_wheel_degrees + " -- Right_wheel_degrees: " + right_wheel_degrees);
 
-        //System.out.println("Left degrees: " + left_wheel_degrees + "  --   Right degrees: " + right_wheel_degrees);
+        //System.out.println("Left_wheel_degrees: " + left_wheel_encoder + " -- Right_wheel_degrees: " + right_wheel_encoder);
 
-        // Time since start.
-        double timestamp_seconds = timestamp;
+        //System.out.println("Left degrees: " + left_wheel_encoder + "  --   Right degrees: " + right_wheel_encoder);
+
+        right_wheel_odometry = (-1)*right_wheel_odometry;
 
         // Return odometry to library.
-        return new WheelOdometry(timestamp_seconds,left_wheel_degrees,right_wheel_degrees);
+        return new WheelOdometry(timestamp,left_wheel_odometry,right_wheel_odometry);
     }
 
     @Override
