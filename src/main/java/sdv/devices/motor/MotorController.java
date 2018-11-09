@@ -45,6 +45,9 @@ public class MotorController extends Thread {
      * Enabling the GUI to control motors.
      */
     public void run() {
+
+        boolean ready = true;
+
         while (run) {
             //System.out.println("Entering while");
             guiServer.messageFromClient();
@@ -60,35 +63,47 @@ public class MotorController extends Thread {
             //System.out.println("key1: " + guiKeyword1 + " key2: " + guiKeyword2);
 
             if (guiKeyword1.toLowerCase().equals("speed")) {
+                ready = false;
                 int speed = Integer.parseInt(guiKeyword2);
                 motorCommands.setMotorSpeed(speed);
                 //System.out.println("Speed set:" + speed);
             }
 
             if (text.toLowerCase().trim().equals("getencoder")) {
+                ready = false;
                 motorCommands.getEncoderData();
                 pythonClient.messageFromServer();
                 //System.out.println("Encoder1: " + pythonClient.response[1]);
                 //System.out.println("Encoder2: " + pythonClient.response[3]);
+            }
+            if(ready) {
+                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("left")) {
+                    ready = false;
+                    motorCommands.turnLeft();
+                }
+                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("right")) {
+                    ready = false;
+                    motorCommands.turnRight();
+                }
+                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("up")) {
+                    ready = false;
+                    motorCommands.forward();
+                }
+                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("down")) {
+                    ready = false;
+                    motorCommands.reverse();
+                }
+                if (text.toLowerCase().trim().equals("getspeed")) {
+                    ready = false;
+                    pythonClient.sendMotorSpeedRequest();
+                }
+            }
+            if(!ready){
+               if (guiKeyword1.toLowerCase().equals("key_released")) {
+                   motorCommands.stop();
+                   ready = true;
+               }
 
-            }
-            if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("left")) {
-                motorCommands.turnLeft();
-            }
-            if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("right")) {
-                motorCommands.turnRight();
-            }
-            if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("up")) {
-                motorCommands.forward();
-            }
-            if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("down")) {
-                motorCommands.reverse();
-            }
-            if (text.toLowerCase().trim().equals("getspeed")) {
-                pythonClient.sendMotorSpeedRequest();
-            }
-            if (guiKeyword1.toLowerCase().equals("key_released")) {
-                motorCommands.stop();
             }
             if (text.toLowerCase().trim().equals("exit")) {
                 System.out.println("Shutting down");
