@@ -1,4 +1,6 @@
+import edu.wlu.cs.levy.breezyslam.algorithms.DeterministicSLAM;
 import edu.wlu.cs.levy.breezyslam.algorithms.RMHCSLAM;
+import edu.wlu.cs.levy.breezyslam.algorithms.SinglePositionSLAM;
 import edu.wlu.cs.levy.breezyslam.components.Laser;
 import edu.wlu.cs.levy.breezyslam.components.PoseChange;
 import edu.wlu.cs.levy.breezyslam.components.Position;
@@ -62,7 +64,6 @@ public class MovingSlam {
             Laser myLidar;
             RMHCSLAM slam;
             PoseChange poseChange;
-            WheeledRobot wheeledRobot;
             Robot robot;
 
             robot = new Robot(60, 235);
@@ -70,10 +71,10 @@ public class MovingSlam {
 
             myLidar = new Laser(530, 1000,
                     360, 1,
-                    1, 0.1);
+                    1, 0);
 
 
-            slam = new RMHCSLAM(myLidar, 820, 40, HOLE_WIDTH_MM);
+            slam = new RMHCSLAM(myLidar, 820, 40, 0);
 
             Position position = slam.getpos();
             System.out.println("Position: " + position);
