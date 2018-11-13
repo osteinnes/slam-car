@@ -7,6 +7,8 @@ import java.net.Socket;
 /**
  * TCP-server to the GUI. Serves as a communication relay
  * for the GUI to control the motor controller.
+ *
+ * @author Ole-martin Steinnes
  */
 public abstract class TcpServer {
 
