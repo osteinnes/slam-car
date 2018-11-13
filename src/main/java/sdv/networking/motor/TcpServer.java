@@ -3,13 +3,12 @@ package sdv.networking.motor;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * TCP-server to the GUI. Serves as a communication relay
  * for the GUI to control the motor controller.
  */
-public class TcpServer {
+public abstract class TcpServer {
 
     // True when connected to GUI, false otherwise.
     public Boolean connected;
@@ -37,15 +36,15 @@ public class TcpServer {
      * Returns true if connected, false otherwise.
      * @return true if connected, false otherwise.
      */
-    public boolean connect(){
+    public boolean connect(int port){
         try {
             while(!connected) {
-                ServerSocket welcomeSocket = new ServerSocket(8000);
+                ServerSocket welcomeSocket = new ServerSocket(port);
                 connectionSocket = welcomeSocket.accept();
                 inFromClient =  new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                 if(connectionSocket.isConnected()) {
-                    System.out.println("Client connected at " +connectionSocket.getRemoteSocketAddress());
+                    System.out.println("Client connected at " + connectionSocket.getRemoteSocketAddress());
                     connected = true;
                 }
             }
@@ -59,20 +58,10 @@ public class TcpServer {
     /**
      * Recieves messages from client.
      */
-    public void messageFromClient(){
-        try {
-            clientRequest = inFromClient.readLine();
-            if(clientRequest != null){
-                clientString = clientRequest;
-                //System.out.println("Received: " + clientString);
-            }
-            else {
-                clientString = "";
-                System.out.println("NOTHING RECEIVED");
-            }
-        } catch (SocketException e) {
+    abstract void messageFromClient();
 
-        } catch (IOException e) {
-        }
-    }
+    /**
+     * Sends messages to client.
+     */
+    abstract void sendToClient(byte[] byteArray);
 }

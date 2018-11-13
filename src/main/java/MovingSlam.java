@@ -10,6 +10,7 @@ import io.scanse.sweep.SweepSample;
 import sdv.algorithms.slam.Robot;
 import sdv.devices.camera.RunWebcamera;
 import sdv.devices.motor.MotorController;
+import sdv.networking.motor.SlamServer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -34,11 +35,17 @@ public class MovingSlam {
     public static void main(String[] args) {
         MotorController motorController = new MotorController();
         RunWebcamera WebCam = new RunWebcamera();
+        SlamServer slamServer = new SlamServer();
+
+
+        byte[] mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
+
 
         WebCam.start();
         motorController.start();
 
 
+        slamServer.connect(8002);
         System.out.println("Past motorcontroller.run()");
         System.out.println("Build 2");
 
@@ -151,7 +158,11 @@ public class MovingSlam {
                         position = slam.getpos();
                         System.out.println("Position: " + position);
                         System.out.println();
+                        slam.getmap(mapbytes);
+                        slamServer.sendToClient(mapbytes);
                         //System.out.println("Slam updated!");
+
+
                     }
                 }
 
@@ -163,8 +174,6 @@ public class MovingSlam {
 
             device.stopScanning();
             device.setMotorSpeed(0);
-
-            byte[] mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
 
             slam.getmap(mapbytes);
 

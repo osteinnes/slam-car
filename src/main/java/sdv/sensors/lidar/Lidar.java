@@ -13,9 +13,16 @@ public class Lidar {
 
     /**
      * Constructor of the Lidar-class
+     */
+    public Lidar() {
+
+    }
+
+    /**
+     *
      * @param port port Lidar is connected to
      */
-    public Lidar(String port) {
+    public void doConnectLidar(String port) {
         this.device = new SweepDevice(port);
     }
 
