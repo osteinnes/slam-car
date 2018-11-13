@@ -24,7 +24,6 @@ public class GuiServer extends TcpServer {
             }
             else {
                 clientString = "";
-                System.out.println("NOTHING RECEIVED");
             }
         } catch (SocketException e) {
 

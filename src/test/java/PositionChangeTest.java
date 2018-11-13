@@ -16,7 +16,7 @@ public class PositionChangeTest {
         lidar.setLidarValues(1,100);
         lidar.startLidarScan();
 
-        slam.updateSlam(lidar.getLidarDevice());
+        slam.run(lidar.getLidarDevice());
 
         lidar.stopLidarScan();
         lidar.stopLidarMotor();

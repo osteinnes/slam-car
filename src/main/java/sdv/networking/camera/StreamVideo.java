@@ -71,4 +71,8 @@ public class StreamVideo {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         this.socket.send(packet);
     }
+
+    public void closeSocket() {
+        this.socket.close();
+    }
 }
