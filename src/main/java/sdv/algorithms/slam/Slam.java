@@ -105,6 +105,12 @@ public class Slam {
                     slam.update(scan, poseChange);
 
                     slam.getmap(mapbytes);
+                    System.out.println("Sending mapbytes to server:");
+                    System.out.println();
+                    System.out.println(mapbytes.length);
+
+                    System.out.println();
+                    System.out.println(mapbytes[224550]);
                     slamServer.sendToClient(mapbytes);
                 }
             }
