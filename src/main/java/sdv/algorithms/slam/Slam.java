@@ -95,7 +95,7 @@ public class Slam extends Thread {
                 1, 0.1);
 
         // new SLAM library
-        slam = new RMHCSLAM(myLidar, 820, 10, HOLE_WIDTH_MM);
+        slam = new RMHCSLAM(myLidar, 820, 40, HOLE_WIDTH_MM);
     }
 
 
