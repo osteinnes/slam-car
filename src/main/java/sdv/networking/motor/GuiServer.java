@@ -28,7 +28,7 @@ public class GuiServer extends TcpServer {
     }
 
     @Override
-    void sendToClient() {
+    void sendToClient(byte[] byteArray) {
 
     }
 }
