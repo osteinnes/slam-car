@@ -57,13 +57,15 @@ public class AppManager {
 
                 this.controlMessage = this.appController.getControlMsg();
 
-                if (this.controlMessage.equalsIgnoreCase("start") && !this.appRunning) {
+                System.out.println("DEBUG STRING: " + this.controlMessage);
+
+                if (this.controlMessage.equalsIgnoreCase("MOTORCONTROLLER:START") && !this.appRunning) {
 
                     this.motorInterface = new MotorInterface();
                     this.motorInterface.start();
                     this.appRunning = true;
 
-                } else if (this.controlMessage.equalsIgnoreCase("runslam") && this.appRunning && !this.slamRunning) {
+                } else if (this.controlMessage.equalsIgnoreCase("SLAM:START") && this.appRunning && !this.slamRunning) {
 
                     this.lidar.doConnectLidar("/dev/ttyUSB0");
                     this.lidar.setLidarValues(1, 1000);
@@ -75,13 +77,15 @@ public class AppManager {
 
                     this.slamRunning = true;
 
-                } else if (this.controlMessage.equalsIgnoreCase("runcam") && this.appRunning && !this.camRunning) {
+                } else if (this.controlMessage.equalsIgnoreCase("WEBCAM:START") && this.appRunning && !this.camRunning) {
 
                     this.runWebcamera.start();
                     this.camRunning = true;
 
                 } else if (this.controlMessage.equalsIgnoreCase("stop") && this.appRunning) {
-                    //TODO: Create stop capabilities of MotorController.
+                    motorInterface.doStop();
+                    this.appRunning = false;
+
                 } else if (this.controlMessage.equalsIgnoreCase("stopslam") && this.appRunning && this.slamRunning) {
 
                     slam.interrupt();
@@ -108,7 +112,7 @@ public class AppManager {
                         camRunning = false;
                     }
 
-                    //TODO: need to implement a stopping functionality in MotorController and the likes.
+                    motorInterface.doStop();
 
                     appRunning = false;
                 }

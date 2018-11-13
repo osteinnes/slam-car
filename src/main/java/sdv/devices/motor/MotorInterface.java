@@ -28,9 +28,7 @@ public class MotorInterface extends Thread {
     public void run() {
         try {
             thread.start();
-            System.out.println("State of Control Thread: " + thread.getState());
             this.encoderThread.start();
-            System.out.println("State of Encoder Thread: " + this.encoderThread.getState());
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -130,7 +130,6 @@ public class Slam extends Thread {
                 // Add distance to scan vector
                 scans.addElement(distanceA);
                 ns = scans.size();
-                System.out.println("Scan size: " + ns);
 
                 // For each scan
                 for (int x = 0; x < ns; x++) {
