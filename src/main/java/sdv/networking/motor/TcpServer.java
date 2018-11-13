@@ -3,7 +3,6 @@ package sdv.networking.motor;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * TCP-server to the GUI. Serves as a communication relay
