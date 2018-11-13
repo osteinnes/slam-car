@@ -33,7 +33,7 @@ public class AppController {
     /**
      * Activates the socket-connection with the GUI.
      */
-    private void doStartController() {
+    public void doStartController() {
         if (!this.guiController.connected) {
             System.out.println("Waiting for connection from GUI-controller.");
             this.guiController.connect(8003);

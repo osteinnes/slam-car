@@ -30,6 +30,10 @@ public class RunWebcamera extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            if (Thread.currentThread().isInterrupted()) {
+                streamVideo.closeSocket();
+            }
         }
     }
 }

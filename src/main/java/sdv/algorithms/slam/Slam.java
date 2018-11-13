@@ -47,26 +47,31 @@ public class Slam extends Thread {
 
     /**
      * Constructor of the Slam-class.
-     *
-     * @param mc            MotorController of the car
-     * @param sweepDevice   Sweep LiDAR of the car
-     * @param slamServer    Server for transmitting SLAM-results.
-     * @param lidarSpeed    Motor speed of LiDAR
      */
-    public Slam(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
-        setUpFields(lidarSpeed);
-        setUpObjects(mc, sweepDevice, slamServer);
+    public Slam() {
+        setUpFields();
 
     }
 
     /**
      * Sets up fields used in our SLAM application
      *
-     * @param lidarSpeed    Motor speed of LiDAR
      */
-    private void setUpFields(int lidarSpeed) {
+    private void setUpFields() {
         // Byte-array we store map in.
         mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
+    }
+
+    /**
+     * Sets up objects used in our SLAM application
+     *
+     * @param mc            MotorController of the car
+     * @param sweepDevice   Sweep LiDAR of the car
+     * @param slamServer    Server for transmitting SLAM-map
+     * @param lidarSpeed    Motor speed of LiDAR
+     */
+    public void initSlam(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
+
         this.lidarSpeed = lidarSpeed;
 
         if (this.lidarSpeed == 1) {
@@ -76,16 +81,6 @@ public class Slam extends Thread {
         } else {
             this.sampleLimit = 1060;
         }
-    }
-
-    /**
-     * Sets up objects used in our SLAM application
-     *
-     * @param mc            MotorController of the car
-     * @param sweepDevice   Sweep LiDAR of the car
-     * @param slamServer    Server for transmitting SLAM-map
-     */
-    private void setUpObjects(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer) {
 
         this.motorController = mc;
         this.sweepDevice = sweepDevice;
@@ -102,6 +97,7 @@ public class Slam extends Thread {
         // new SLAM library
         slam = new RMHCSLAM(myLidar, 820, 10, HOLE_WIDTH_MM);
     }
+
 
     /**
      * Updates the SLAM-algorithm based on lidar scans.

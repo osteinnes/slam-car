@@ -17,7 +17,7 @@ public class StaticSlam {
         lidar.doConnectLidar("/dev/ttyUSB0");
         lidar.setLidarValues(1, 1000);
         lidar.startLidarScan();
-        Slam slam = new Slam(motorController, lidar.getLidarDevice(), slamServer, 1);
+        Slam slam = new Slam();
         slam.run();
 
 
