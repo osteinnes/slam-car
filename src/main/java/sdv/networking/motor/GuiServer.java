@@ -3,6 +3,11 @@ package sdv.networking.motor;
 import java.io.IOException;
 import java.net.SocketException;
 
+/**
+ * Class that extends a TcpServer-class. Makes it possible to receive from the client.
+ *
+ * @author Ole-martin Steinnes
+ */
 public class GuiServer extends TcpServer {
 
     public GuiServer() {
