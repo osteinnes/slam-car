@@ -1,7 +1,7 @@
 package sdv.devices.motor;
 
 import sdv.networking.motor.TcpClient;
-import sdv.networking.motor.TcpServer;
+import sdv.networking.motor.GuiServer;
 
 import java.util.Scanner;
 
@@ -24,7 +24,7 @@ public class MotorController extends Thread {
     private MotorCommands motorCommands2;
 
     // Object containing the Python-client
-    private TcpServer guiServer;
+    private GuiServer guiServer;
 
     // Keywords from guiClient.
     private String guiKeyword1;
@@ -121,7 +121,7 @@ public class MotorController extends Thread {
         this.pythonClient2 = new TcpClient();
         this.motorCommands = new MotorCommands(pythonClient);
         this.motorCommands2 = new MotorCommands(pythonClient2);
-        this.guiServer = new TcpServer();
+        this.guiServer = new GuiServer();
 
         this.guiKeyword1 = "";
         this.guiKeyword2 = "";
@@ -145,7 +145,7 @@ public class MotorController extends Thread {
 
         if (!guiServer.connected) {
             System.out.println("Waiting for connection");
-            guiServer.connect();
+            guiServer.connect(8000);
         }
     }
 
@@ -161,7 +161,7 @@ public class MotorController extends Thread {
 
     /**
      * Gets encoder data from the motor controller, using the MotorCommands and TcpClient classes.
-     * Recieves encoder data from Python-guiServer and makes sure that the data recieved is in the correct format.
+     * Recieves encoder data from Python-GuiServer and makes sure that the data recieved is in the correct format.
      * Furthermore, it returns a string array of encoder values (enc1: int, enc2: int)
      *
      * @return a string array of encoder values (enc1: int, enc2: int)

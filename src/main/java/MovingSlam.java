@@ -152,6 +152,8 @@ public class MovingSlam {
                         System.out.println("Position: " + position);
                         System.out.println();
                         //System.out.println("Slam updated!");
+
+
                     }
                 }
 
