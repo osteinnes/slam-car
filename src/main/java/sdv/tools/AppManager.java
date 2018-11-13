@@ -3,7 +3,7 @@ package sdv.tools;
 
 import sdv.algorithms.slam.Slam;
 import sdv.devices.camera.RunWebcamera;
-import sdv.devices.motor.MotorController;
+import sdv.devices.motor.MotorInterface;
 import sdv.networking.motor.SlamServer;
 import sdv.sensors.lidar.Lidar;
 
@@ -17,7 +17,7 @@ public class AppManager {
     // Objects used in the main program
     private AppController appController;
     private String controlMessage;
-    private MotorController motorController;
+    private MotorInterface motorInterface;
     private SlamServer slamServer;
     private Lidar lidar;
     private Slam slam;
@@ -59,8 +59,8 @@ public class AppManager {
 
                 if (this.controlMessage.equalsIgnoreCase("start") && !this.appRunning) {
 
-                    this.motorController = new MotorController();
-                    this.motorController.start();
+                    this.motorInterface = new MotorInterface();
+                    this.motorInterface.start();
                     this.appRunning = true;
 
                 } else if (this.controlMessage.equalsIgnoreCase("runslam") && this.appRunning && !this.slamRunning) {
@@ -70,7 +70,7 @@ public class AppManager {
                     this.lidar.startLidarScan();
 
                     this.slamServer.connect(8002);
-                    this.slam.initSlam(motorController, lidar.getLidarDevice(), slamServer, 1);
+                    this.slam.initSlam(motorInterface, lidar.getLidarDevice(), slamServer, 1);
                     slam.start();
 
                     this.slamRunning = true;

@@ -2,12 +2,6 @@ package sdv.devices.motor;
 
 import sdv.networking.motor.GuiServer;
 import sdv.networking.motor.TcpClient;
-import sdv.networking.motor.TcpServer;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 class ControlThread implements Runnable {
 

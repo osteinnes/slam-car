@@ -1,21 +1,17 @@
-import edu.wlu.cs.levy.breezyslam.algorithms.DeterministicSLAM;
 import edu.wlu.cs.levy.breezyslam.algorithms.RMHCSLAM;
-import edu.wlu.cs.levy.breezyslam.algorithms.SinglePositionSLAM;
 import edu.wlu.cs.levy.breezyslam.components.Laser;
 import edu.wlu.cs.levy.breezyslam.components.PoseChange;
 import edu.wlu.cs.levy.breezyslam.components.Position;
-import edu.wlu.cs.levy.breezyslam.robots.WheeledRobot;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
 import sdv.algorithms.slam.Robot;
 import sdv.devices.camera.RunWebcamera;
-import sdv.devices.motor.MotorController;
+import sdv.devices.motor.MotorInterface;
 import sdv.networking.motor.SlamServer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -33,7 +29,7 @@ public class MovingSlam {
     }
 
     public static void main(String[] args) {
-        MotorController motorController = new MotorController();
+        MotorInterface motorInterface = new MotorInterface();
         RunWebcamera WebCam = new RunWebcamera();
         SlamServer slamServer = new SlamServer();
 
@@ -42,7 +38,7 @@ public class MovingSlam {
 
 
         WebCam.start();
-        motorController.start();
+        motorInterface.start();
 
 
         slamServer.connect(8002);
@@ -117,7 +113,7 @@ public class MovingSlam {
                     int enc1, enc2;
 
                     // String array that holds encoder values.
-                    String[] strings = motorController.getEncoder();
+                    String[] strings = motorInterface.fetchEncoderData();
                    // System.out.println("Before IF");
                    // System.out.println("Strings: " + strings[1]);
                     // If strings do not contain "no response" we know strings contain

@@ -4,7 +4,7 @@ import edu.wlu.cs.levy.breezyslam.algorithms.RMHCSLAM;
 import edu.wlu.cs.levy.breezyslam.components.*;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
-import sdv.devices.motor.MotorController;
+import sdv.devices.motor.MotorInterface;
 import sdv.networking.motor.SlamServer;
 
 import java.io.BufferedWriter;
@@ -26,7 +26,7 @@ public class Slam extends Thread {
 
     private SlamServer slamServer;
 
-    private MotorController motorController;
+    private MotorInterface motorInterface;
     private SweepDevice sweepDevice;
 
     private int lidarSpeed;
@@ -65,12 +65,12 @@ public class Slam extends Thread {
     /**
      * Sets up objects used in our SLAM application
      *
-     * @param mc            MotorController of the car
-     * @param sweepDevice   Sweep LiDAR of the car
-     * @param slamServer    Server for transmitting SLAM-map
-     * @param lidarSpeed    Motor speed of LiDAR
+     * @param motorInterface            MotorController of the car
+     * @param sweepDevice               Sweep LiDAR of the car
+     * @param slamServer                Server for transmitting SLAM-map
+     * @param lidarSpeed                Motor speed of LiDAR
      */
-    public void initSlam(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
+    public void initSlam(MotorInterface motorInterface, SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
 
         this.lidarSpeed = lidarSpeed;
 
@@ -82,7 +82,7 @@ public class Slam extends Thread {
             this.sampleLimit = 1060;
         }
 
-        this.motorController = mc;
+        this.motorInterface = motorInterface;
         this.sweepDevice = sweepDevice;
         this.slamServer = slamServer;
 
