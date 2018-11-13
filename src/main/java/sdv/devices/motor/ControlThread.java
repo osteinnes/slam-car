@@ -44,19 +44,19 @@ class ControlThread implements Runnable {
             }
 
             if (ready) {
-                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("left")) {
+                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("a")) {
                     ready = false;
                     motorCommands.turnLeft();
                 }
-                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("right")) {
+                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("d")) {
                     ready = false;
                     motorCommands.turnRight();
                 }
-                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("up")) {
+                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("w")) {
                     ready = false;
                     motorCommands.forward();
                 }
-                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("down")) {
+                if (guiKeyword1.toLowerCase().equals("key_pressed") && guiKeyword2.toLowerCase().equals("s")) {
                     ready = false;
                     motorCommands.reverse();
                 }

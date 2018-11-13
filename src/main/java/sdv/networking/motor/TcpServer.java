@@ -23,6 +23,8 @@ public abstract class TcpServer {
     // Request from client
     String clientRequest;
 
+    private ServerSocket welcomeSocket;
+
     private Socket connectionSocket;
 
     /**
@@ -41,7 +43,7 @@ public abstract class TcpServer {
     public boolean connect(int port){
         try {
             while(!connected) {
-                ServerSocket welcomeSocket = new ServerSocket(port);
+                welcomeSocket = new ServerSocket(port);
                 connectionSocket = welcomeSocket.accept();
                 inFromClient =  new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 outToClient = new DataOutputStream(connectionSocket.getOutputStream());
@@ -74,6 +76,8 @@ public abstract class TcpServer {
     public void closeSocket() {
         try {
             connectionSocket.close();
+            welcomeSocket.close();
+            inFromClient.reset();
         }catch(IOException e) {
             e.printStackTrace();
         }
