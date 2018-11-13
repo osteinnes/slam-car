@@ -77,7 +77,7 @@ public class AppManager {
 
                     this.slamRunning = true;
 
-                } else if (this.controlMessage.equalsIgnoreCase("WEBCAM:START") && this.appRunning && !this.camRunning) {
+                } else if (this.controlMessage.equalsIgnoreCase("WEBCAM:START") && !this.camRunning) {
 
                     this.runWebcamera.start();
                     this.camRunning = true;
