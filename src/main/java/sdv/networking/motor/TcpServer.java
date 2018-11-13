@@ -64,4 +64,8 @@ public abstract class TcpServer {
      * Sends messages to client.
      */
     abstract void sendToClient(byte[] byteArray);
+
+    public String getClientString() {
+        return clientString;
+    }
 }
