@@ -48,7 +48,7 @@ public class Robot extends WheeledRobot{
 
         //System.out.println("Left degrees: " + left_wheel_encoder + "  --   Right degrees: " + right_wheel_encoder);
 
-        right_wheel_odometry = (-1)*right_wheel_odometry;
+        left_wheel_odometry = (-1)*left_wheel_odometry;
 
         // Return odometry to library.
         return new WheelOdometry(timestamp,left_wheel_odometry,right_wheel_odometry);

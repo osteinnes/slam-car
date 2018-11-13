@@ -25,6 +25,7 @@ public class Slam extends Thread {
     private PoseChange poseChange;
 
     private SlamServer slamServer;
+    private Robot robot;
 
     private MotorInterface motorInterface;
     private SweepDevice sweepDevice;
@@ -55,7 +56,6 @@ public class Slam extends Thread {
 
     /**
      * Sets up fields used in our SLAM application
-     *
      */
     private void setUpFields() {
         // Byte-array we store map in.
@@ -65,10 +65,10 @@ public class Slam extends Thread {
     /**
      * Sets up objects used in our SLAM application
      *
-     * @param motorInterface            MotorController of the car
-     * @param sweepDevice               Sweep LiDAR of the car
-     * @param slamServer                Server for transmitting SLAM-map
-     * @param lidarSpeed                Motor speed of LiDAR
+     * @param motorInterface MotorController of the car
+     * @param sweepDevice    Sweep LiDAR of the car
+     * @param slamServer     Server for transmitting SLAM-map
+     * @param lidarSpeed     Motor speed of LiDAR
      */
     public void initSlam(MotorInterface motorInterface, SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
 
@@ -96,6 +96,8 @@ public class Slam extends Thread {
 
         // new SLAM library
         slam = new RMHCSLAM(myLidar, 820, 40, HOLE_WIDTH_MM);
+
+        robot = new Robot(30, 140);
     }
 
 
@@ -115,10 +117,10 @@ public class Slam extends Thread {
             Vector<int[]> scans = new Vector<int[]>();
 
             // Enter when there is mor than 1059 samples in the scan.
-            if (s.size() > (this.sampleLimit-1)) {
+            if (s.size() > (this.sampleLimit - 1)) {
 
                 // For each sample, get distance.
-                for (int i = 0; i <= (this.sampleLimit-1); i++) {
+                for (int i = 0; i <= (this.sampleLimit - 1); i++) {
                     int dist = s.get(i).getDistance();
                     //  System.out.println("Dist(i): " + dist);
                     distanceA[i] = dist * 10;
@@ -131,6 +133,42 @@ public class Slam extends Thread {
                 scans.addElement(distanceA);
                 ns = scans.size();
 
+                // Encoder one ande two from motor controller.
+                int enc1, enc2;
+
+                // String array that holds encoder values.
+                String[] strings = motorInterface.fetchEncoderData();
+                // System.out.println("Before IF");
+                // System.out.println("Strings: " + strings[1]);
+                // If strings do not contain "no response" we know strings contain
+                // proper encoder values. Hence, we assign them to PoseChange-object.
+                if (!strings[1].equalsIgnoreCase("no response")) {
+                    //   System.out.println("In IF");
+
+                    // encoder values
+                    String encoder1 = strings[1];
+                    String encoder2 = strings[3];
+
+                    System.out.println();
+                    System.out.println();
+                    System.out.println();
+                    System.out.println("ENKODER1: " + encoder1 + " -- ENKODER2: " + encoder2);
+                    System.out.println();
+
+
+                    // Parsing encoder values from String to int.
+                    enc1 = Integer.parseInt(encoder1);
+                    enc2 = Integer.parseInt(encoder2);
+
+                    //   System.out.println("TIME: " + time);
+
+
+                    // Computing PoseChange through abstract Robot-class.
+                    poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);
+                    System.out.println(poseChange.toString());
+                    System.out.println();
+                    // System.out.println("1:: " + poseChange.getDxyMm());
+                }
                 // For each scan
                 for (int x = 0; x < ns; x++) {
 
@@ -144,7 +182,7 @@ public class Slam extends Thread {
             }
 
             // Scan until the thread is interrupted.
-            if(Thread.currentThread().isInterrupted()) {
+            if (Thread.currentThread().isInterrupted()) {
                 writeMap();
                 sweepDevice.stopScanning();
                 sweepDevice.setMotorSpeed(0);
@@ -156,7 +194,7 @@ public class Slam extends Thread {
     /**
      * Writes a map of the scan to a file.
      */
-    private void writeMap() {
+    public void writeMap() {
         // Byte-array we store map in.
         byte[] mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
 
