@@ -23,8 +23,11 @@ public class RunWebcamera extends Thread {
             }
 
             try {
+                sleep(3);
                 streamVideo.doSendImage(readWebcam.doGetImage());
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

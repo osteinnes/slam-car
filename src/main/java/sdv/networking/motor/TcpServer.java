@@ -3,6 +3,7 @@ package sdv.networking.motor;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * TCP-server to the GUI. Serves as a communication relay
@@ -21,6 +22,8 @@ public class TcpServer {
     // Request from client
     String clientRequest;
 
+    private Socket connectionSocket;
+
     /**
      * Constructor of the TcpServer. Sets connected to false initially
      */
@@ -38,7 +41,7 @@ public class TcpServer {
         try {
             while(!connected) {
                 ServerSocket welcomeSocket = new ServerSocket(8000);
-                Socket connectionSocket = welcomeSocket.accept();
+                connectionSocket = welcomeSocket.accept();
                 inFromClient =  new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                 if(connectionSocket.isConnected()) {
@@ -61,15 +64,15 @@ public class TcpServer {
             clientRequest = inFromClient.readLine();
             if(clientRequest != null){
                 clientString = clientRequest;
-                System.out.println("Received: " + clientString);
+                //System.out.println("Received: " + clientString);
             }
             else {
                 clientString = "";
                 System.out.println("NOTHING RECEIVED");
             }
-        }
-        catch (IOException ex){
-            ex.printStackTrace();
+        } catch (SocketException e) {
+
+        } catch (IOException e) {
         }
     }
 }

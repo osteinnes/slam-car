@@ -2,6 +2,7 @@ package sdv.devices.camera;
 
 import com.github.sarxos.webcam.Webcam;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -26,6 +27,7 @@ public class WebCam {
      */
     private void doSetupWebcam() {
         this.webcam = Webcam.getDefault();
+        this.webcam.setViewSize(new Dimension(176,144));
 
         if (null != this.webcam) {
             System.out.println(this.webcam.getDevice().getName());
