@@ -4,6 +4,7 @@ import edu.wlu.cs.levy.breezyslam.algorithms.RMHCSLAM;
 import edu.wlu.cs.levy.breezyslam.components.*;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
+import sdv.networking.motor.SlamServer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -22,6 +23,8 @@ public class Slam {
     private RMHCSLAM slam;
     private PoseChange poseChange;
 
+    private SlamServer slamServer;
+
     private final int HOLE_WIDTH_MM = 200;
 
     private int ns = 0;
@@ -38,6 +41,9 @@ public class Slam {
      */
     public Slam() {
         setUpSlam();
+
+        slamServer = new SlamServer();
+        slamServer.connect(8002);
     }
 
     /**
@@ -61,6 +67,9 @@ public class Slam {
      * @param device LiDAR-object
      */
     public void updateSlam(SweepDevice device) {
+
+        // Byte-array we store map in.
+        byte[] mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
         // Loops through samples of each scan
         for (List<SweepSample> s : device.scans()) {
 
@@ -94,11 +103,14 @@ public class Slam {
                     int[] scan = scans.elementAt(x);
                     // Update slam with new scan and position change
                     slam.update(scan, poseChange);
+
+                    slam.getmap(mapbytes);
+                    slamServer.sendToClient(mapbytes);
                 }
             }
 
             // Scan for 60 seconds then break
-            if(time + 60000 < System.currentTimeMillis()) {
+            if(time + 120000 < System.currentTimeMillis()) {
 
                 break;
             }

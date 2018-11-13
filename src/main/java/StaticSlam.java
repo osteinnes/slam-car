@@ -15,7 +15,6 @@ public class StaticSlam {
         lidar.startLidarScan();
         Slam slam = new Slam();
         slam.updateSlam(lidar.getLidarDevice());
-        slam.writeMap();
         lidar.stopLidarScan();
         lidar.stopLidarMotor();
 
