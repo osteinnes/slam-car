@@ -4,6 +4,7 @@ import edu.wlu.cs.levy.breezyslam.algorithms.RMHCSLAM;
 import edu.wlu.cs.levy.breezyslam.components.*;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
+import sdv.devices.motor.MotorController;
 import sdv.networking.motor.SlamServer;
 
 import java.io.BufferedWriter;
@@ -17,13 +18,18 @@ import java.util.Vector;
  *
  * @author Ole-martin Steinnes
  */
-public class Slam {
+public class Slam extends Thread {
 
     private Laser myLidar;
     private RMHCSLAM slam;
     private PoseChange poseChange;
 
     private SlamServer slamServer;
+
+    private MotorController motorController;
+    private SweepDevice sweepDevice;
+
+    private byte[] mapbytes;
 
     private final int HOLE_WIDTH_MM = 200;
 
@@ -39,17 +45,26 @@ public class Slam {
     /**
      * Constructor of the SLAM-class
      */
-    public Slam() {
-        setUpSlam();
+    public Slam(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer) {
+        setUpFields();
+        setUpObjects(mc, sweepDevice, slamServer);
 
-        slamServer = new SlamServer();
-        slamServer.connect(8002);
+    }
+
+    private void setUpFields() {
+        // Byte-array we store map in.
+        mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
     }
 
     /**
      * Sets up slam objects
      */
-    private void setUpSlam() {
+    private void setUpObjects(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer) {
+
+        this.motorController = mc;
+        this.sweepDevice = sweepDevice;
+        this.slamServer = slamServer;
+
         // new position change object.
         poseChange = new PoseChange();
 
@@ -64,14 +79,12 @@ public class Slam {
 
     /**
      * Updates the SLAM-algorithm based on lidar scans.
-     * @param device LiDAR-object
      */
-    public void updateSlam(SweepDevice device) {
+    public void updateSlam() {
 
-        // Byte-array we store map in.
-        byte[] mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
+
         // Loops through samples of each scan
-        for (List<SweepSample> s : device.scans()) {
+        for (List<SweepSample> s : sweepDevice.scans()) {
 
             // Int-array of distances in scan.
             int[] distanceA = new int[1060];
@@ -101,16 +114,10 @@ public class Slam {
                 for (int x = 0; x < ns; x++) {
 
                     int[] scan = scans.elementAt(x);
+
                     // Update slam with new scan and position change
                     slam.update(scan, poseChange);
-
                     slam.getmap(mapbytes);
-                    System.out.println("Sending mapbytes to server:");
-                    System.out.println();
-                    System.out.println(mapbytes.length);
-
-                    System.out.println();
-                    System.out.println(mapbytes[224550]);
                     slamServer.sendToClient(mapbytes);
                 }
             }
