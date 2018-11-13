@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * Interface for our SLAM
+ * Interface for our SLAM-algorithm
  *
  * @author Ole-martin Steinnes
  */
@@ -28,6 +28,9 @@ public class Slam extends Thread {
 
     private MotorController motorController;
     private SweepDevice sweepDevice;
+
+    private int lidarSpeed;
+    private int sampleLimit;
 
     private byte[] mapbytes;
 
@@ -43,21 +46,44 @@ public class Slam extends Thread {
     }
 
     /**
-     * Constructor of the SLAM-class
+     * Constructor of the Slam-class.
+     *
+     * @param mc            MotorController of the car
+     * @param sweepDevice   Sweep LiDAR of the car
+     * @param slamServer    Server for transmitting SLAM-results.
+     * @param lidarSpeed    Motor speed of LiDAR
      */
-    public Slam(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer) {
-        setUpFields();
+    public Slam(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
+        setUpFields(lidarSpeed);
         setUpObjects(mc, sweepDevice, slamServer);
 
     }
 
-    private void setUpFields() {
+    /**
+     * Sets up fields used in our SLAM application
+     *
+     * @param lidarSpeed    Motor speed of LiDAR
+     */
+    private void setUpFields(int lidarSpeed) {
         // Byte-array we store map in.
         mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
+        this.lidarSpeed = lidarSpeed;
+
+        if (this.lidarSpeed == 1) {
+            this.sampleLimit = 1060;
+        } else if (this.lidarSpeed == 2) {
+            this.sampleLimit = 513;
+        } else {
+            this.sampleLimit = 1060;
+        }
     }
 
     /**
-     * Sets up slam objects
+     * Sets up objects used in our SLAM application
+     *
+     * @param mc            MotorController of the car
+     * @param sweepDevice   Sweep LiDAR of the car
+     * @param slamServer    Server for transmitting SLAM-map
      */
     private void setUpObjects(MotorController mc, SweepDevice sweepDevice, SlamServer slamServer) {
 
@@ -69,7 +95,7 @@ public class Slam extends Thread {
         poseChange = new PoseChange();
 
         // new LiDAR object.
-        myLidar = new Laser(1060, 1000,
+        myLidar = new Laser(this.sampleLimit, 1000,
                 360, 1,
                 1, 0.1);
 
@@ -80,23 +106,23 @@ public class Slam extends Thread {
     /**
      * Updates the SLAM-algorithm based on lidar scans.
      */
-    public void updateSlam() {
+    public void run() {
 
 
         // Loops through samples of each scan
         for (List<SweepSample> s : sweepDevice.scans()) {
 
             // Int-array of distances in scan.
-            int[] distanceA = new int[1060];
+            int[] distanceA = new int[this.sampleLimit];
 
             // Scan vector
             Vector<int[]> scans = new Vector<int[]>();
 
             // Enter when there is mor than 1059 samples in the scan.
-            if (s.size() > 1059) {
+            if (s.size() > (this.sampleLimit-1)) {
 
                 // For each sample, get distance.
-                for (int i = 0; i <= 1059; i++) {
+                for (int i = 0; i <= (this.sampleLimit-1); i++) {
                     int dist = s.get(i).getDistance();
                     //  System.out.println("Dist(i): " + dist);
                     distanceA[i] = dist * 10;
@@ -122,9 +148,11 @@ public class Slam extends Thread {
                 }
             }
 
-            // Scan for 60 seconds then break
-            if(time + 120000 < System.currentTimeMillis()) {
-
+            // Scan until the thread is interrupted.
+            if(Thread.currentThread().isInterrupted()) {
+                writeMap();
+                sweepDevice.stopScanning();
+                sweepDevice.setMotorSpeed(0);
                 break;
             }
         }
@@ -133,7 +161,7 @@ public class Slam extends Thread {
     /**
      * Writes a map of the scan to a file.
      */
-    public void writeMap() {
+    private void writeMap() {
         // Byte-array we store map in.
         byte[] mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
 
