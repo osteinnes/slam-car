@@ -85,15 +85,34 @@ public class AppManager {
                 } else if (this.controlMessage.equalsIgnoreCase("stopslam") && this.appRunning && this.slamRunning) {
 
                     slam.interrupt();
+                    this.slamRunning = false;
 
                 } else if (this.controlMessage.equalsIgnoreCase("stopcam") && this.appRunning && this.camRunning) {
 
                     runWebcamera.interrupt();
+                    this.camRunning = false;
 
                 }
             } while (this.appController.isConnected());
 
             do {
+
+                if (appRunning) {
+                    if (slamRunning) {
+                        slam.interrupt();
+                        slamRunning = false;
+                    }
+
+                    if (camRunning) {
+                        runWebcamera.interrupt();
+                        camRunning = false;
+                    }
+
+                    //TODO: need to implement a stopping functionality in MotorController and the likes.
+
+                    appRunning = false;
+                }
+
                 this.appController.doStartController();
             } while (!this.appController.isConnected());
 
