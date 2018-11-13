@@ -53,7 +53,7 @@ public class MovingSlam {
             int HOLE_WIDTH_MM = 200;
             int ns = 0;
 
-            device.setMotorSpeed(2);
+            device.setMotorSpeed(1);
             device.setSampleRate(1000);
 
             System.out.println(String.format("Motor Speed: %s Hz", speed));
@@ -69,12 +69,12 @@ public class MovingSlam {
             robot = new Robot(30, 180);
             poseChange = new PoseChange();
 
-            myLidar = new Laser(530, 1000,
+            myLidar = new Laser(1060, 1000,
                     360, 1,
                     1, 0);
 
 
-            slam = new RMHCSLAM(myLidar, 820, 40, 0);
+            slam = new RMHCSLAM(myLidar, 820, 40, 1);
 
             Position position = slam.getpos();
             System.out.println("Position: " + position);
@@ -88,13 +88,13 @@ public class MovingSlam {
 
                 //System.out.println(s.size());
 
-                int[] distanceA = new int[530];
+                int[] distanceA = new int[1060];
 
                 Vector<int[]> scans = new Vector<int[]>();
 
-                if (s.size() > 529) {
+                if (s.size() > 1059) {
                     //System.out.println(s.size());
-                    for (int i = 0; i <= 529; i++) {
+                    for (int i = 0; i <= 1059; i++) {
                         int dist = s.get(i).getDistance();
                         //  System.out.println("Dist(i): " + dist);
                         distanceA[i] = dist * 10;
@@ -155,7 +155,7 @@ public class MovingSlam {
                     }
                 }
 
-                if(firstTime + (120000) < System.currentTimeMillis()) {
+                if(firstTime + (180000) < System.currentTimeMillis()) {
 
                     break;
                 }

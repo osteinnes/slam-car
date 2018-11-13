@@ -135,5 +135,13 @@ public class TcpClient {
         pw.println(payload);
     }
 
+    /**
+     *
+     */
+    public void setStop() {
+        String payload = "stop";
+        pw.println(payload);
+    }
+
 }
 

@@ -63,12 +63,9 @@ public class MotorCommands {
      * Stop the car. Sends corresponding commands to the Python-server
      */
     public void stop(){
-        pythonClient.setBackwardMotor1Speed(0);
-        pythonClient.setBackwardMotor2Speed(0);
-        pythonClient.setForwardMotor2Speed(0);
-        pythonClient.setForwardMotor1Speed(0);
-        //System.out.println("STOP REQUEST SENT");
+        pythonClient.setStop();
     }
+
     /**
      * Fetches encoder data for left and right encoder from Python server.
      */
