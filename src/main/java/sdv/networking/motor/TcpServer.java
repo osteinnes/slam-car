@@ -70,4 +70,12 @@ public abstract class TcpServer {
     public String getClientString() {
         return clientString;
     }
+
+    public void closeSocket() {
+        try {
+            connectionSocket.close();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

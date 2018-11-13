@@ -10,15 +10,16 @@ import java.net.Socket;
 public class TcpClient {
 
     // Response from server
-    String serverResponse;
+    private String serverResponse;
     // Boolean for connected status.
     public Boolean connected;
     // Input from server.
-    BufferedReader in;
+    private BufferedReader in;
     // Output to server.
-    PrintWriter pw;
+    private PrintWriter pw;
     public String[] response;
 
+    private Socket clientSocket;
 
     /**
      * Constructor of the TcpClient-class. Sets connected false initially.
@@ -36,7 +37,7 @@ public class TcpClient {
     public boolean connect(){
         try {
             if(!connected) {
-                Socket clientSocket = new Socket("localhost", 2004);
+                clientSocket = new Socket("localhost", 2004);
                 System.out.println("Connected to server at " + clientSocket.getRemoteSocketAddress());
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 pw = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -141,6 +142,14 @@ public class TcpClient {
     public void setStop() {
         String payload = "stop";
         pw.println(payload);
+    }
+
+    public void closeSocket() {
+        try {
+            clientSocket.close();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
