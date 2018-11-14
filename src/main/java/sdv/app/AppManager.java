@@ -1,4 +1,4 @@
-package sdv.tools;
+package sdv.app;
 
 
 import sdv.algorithms.slam.Slam;
@@ -8,20 +8,57 @@ import sdv.networking.motor.SlamServer;
 import sdv.sensors.lidar.Lidar;
 
 /**
- * Application Manager of our application.
+ * This application was designed as a project in Real-time programming at NTNU Ålesund.
+ * Participants of the project are as follows; Ole-martin H. Steinnes, Sivert Løken,
+ * Eirik G. Gustafsson, and Vebjørn Bjørlo-Larsen. Instructors in the Real-time programming
+ * course is Ivar Blindheim and Webjørn Rekdalsbakken.
+ *
+ * Application Manager of our application. Waits for a GUI-controller to connect.
+ * When the controller has connected it can decide to run some or all features
+ * of the program. Features contained in this program are "MotorController",
+ * "SLAM", and "Webcam". The "MotorController" is two threads that communicate with
+ * the RoboClaw-card equipped on the car. The GUI sends commands such as, turnLeft,
+ * turnRight, forward, and backwards to control the car. Furthermore, this Java-server
+ * sends the RoboClaw request for encoder-data which is in return used in the programs
+ * SLAM-algorithm to determine its location and map relative to that position.
+ *
+ * The Webcam-aspect of the program runs a webcam mounted on the car, and broadcasts this
+ * to the GUI providing a real-time feed to the user controlling the device.
+ *
+ * While there is no autonomous-algorithm implemented in this program right now, it has been
+ * designed with that in mind. The intended algorithm was D*, which would take the
+ * programs SLAM-map, and current position, and wanted position as inputs. Furthermore,
+ * it would determine where it could travel, and where it could not from the SLAM-map.
  *
  * @author Ole-martin Steinnes
  */
 public class AppManager {
 
     // Objects used in the main program
+
+    // Controller of the application (GUI)
     private AppController appController;
-    private String controlMessage;
+
+    // Interface between the GUI, main program and MotorController.
+    // For motor controls and encoder data.
     private MotorInterface motorInterface;
+
+    // A SLAM server that computes the SLAM-algorithm and can
+    // transmit the SLAM-map through a TCP connection to GUI.
     private SlamServer slamServer;
+
+    // Representation of a Scanse LiDAR
     private Lidar lidar;
+
+    // Representation of the SLAM-algorithm
     private Slam slam;
+
+    // An object that runs the Webcam and transmits image to GUI
+    // through UDP.
     private RunWebcamera runWebcamera;
+
+    // Strings used in the main program
+    private String controlMessage;
 
     // Booleann flags used in main program
     private boolean appRunning;

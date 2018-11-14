@@ -1,4 +1,4 @@
-import sdv.tools.AppManager;
+import sdv.app.AppManager;
 
 /**
  * @author Ole-martin Steinnes
