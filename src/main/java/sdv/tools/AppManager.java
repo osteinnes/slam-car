@@ -28,11 +28,21 @@ public class AppManager {
     private boolean slamRunning;
     private boolean camRunning;
 
+    // Boolean parameters for entering while, and if.
+    private boolean startMotorControlParam;
+    private boolean startSlamParam;
+    private boolean startWebCamParam;
+    private boolean stopMotorControlParam;
+    private boolean stopSlamParam;
+    private boolean stopWebCamParam;
+    private boolean controllerConnected;
+
     /**
      * Constructor of our application manager
      */
     public AppManager() {
         doSetUpApp();
+        doCreateBooleanParam();
         doProgramLogic();
     }
 
@@ -48,6 +58,19 @@ public class AppManager {
     }
 
     /**
+     * Creates boolean parameters for when the program should start certain features of the program.
+     */
+    private void doCreateBooleanParam() {
+        this.startMotorControlParam = (this.controlMessage.equalsIgnoreCase("MOTORCONTROLLER:START") && !this.appRunning);
+        this.startSlamParam = (this.controlMessage.equalsIgnoreCase("SLAM:START") && this.appRunning && !this.slamRunning);
+        this.startWebCamParam = (this.controlMessage.equalsIgnoreCase("WEBCAM:START") && !this.camRunning);
+        this.stopMotorControlParam = (this.controlMessage.equalsIgnoreCase("stop") && this.appRunning);
+        this.stopSlamParam = (this.controlMessage.equalsIgnoreCase("stopslam") && this.appRunning && this.slamRunning);
+        this.stopWebCamParam = (this.controlMessage.equalsIgnoreCase("stopcam") && this.appRunning && this.camRunning);
+        this.controllerConnected = this.appController.isConnected();
+    }
+
+    /**
      * Main logic of our program
      */
     private void doProgramLogic() {
@@ -59,67 +82,108 @@ public class AppManager {
 
                 System.out.println("DEBUG STRING: " + this.controlMessage);
 
-                if (this.controlMessage.equalsIgnoreCase("MOTORCONTROLLER:START") && !this.appRunning) {
+                if (startMotorControlParam) {
 
-                    this.motorInterface = new MotorInterface();
-                    this.motorInterface.start();
-                    this.appRunning = true;
+                    doStartMotorController();
 
-                } else if (this.controlMessage.equalsIgnoreCase("SLAM:START") && this.appRunning && !this.slamRunning) {
+                } else if (startSlamParam) {
 
-                    this.lidar.doConnectLidar("/dev/ttyUSB0");
-                    this.lidar.setLidarValues(1, 1000);
-                    this.lidar.startLidarScan();
+                    doStartSlam();
 
-                    this.slamServer.connect(8002);
-                    this.slam.initSlam(motorInterface, lidar.getLidarDevice(), slamServer, 1);
-                    slam.start();
+                } else if (startWebCamParam) {
 
-                    this.slamRunning = true;
+                    doStartWebCam();
 
-                } else if (this.controlMessage.equalsIgnoreCase("WEBCAM:START") && !this.camRunning) {
+                } else if (stopMotorControlParam) {
 
-                    this.runWebcamera.start();
-                    this.camRunning = true;
+                    doStopMotorController();
 
-                } else if (this.controlMessage.equalsIgnoreCase("stop") && this.appRunning) {
-                    motorInterface.doStop();
-                    this.appRunning = false;
+                } else if (stopSlamParam) {
 
-                } else if (this.controlMessage.equalsIgnoreCase("stopslam") && this.appRunning && this.slamRunning) {
+                    doStopSlam();
 
-                    slam.interrupt();
-                    this.slamRunning = false;
+                } else if (stopWebCamParam) {
 
-                } else if (this.controlMessage.equalsIgnoreCase("stopcam") && this.appRunning && this.camRunning) {
-
-                    runWebcamera.interrupt();
-                    this.camRunning = false;
+                    doStopWebCam();
 
                 }
-            } while (this.appController.isConnected());
+            } while (controllerConnected);
 
             do {
 
                 if (appRunning) {
                     if (slamRunning) {
-                        slam.interrupt();
-                        slamRunning = false;
+                        doStopSlam();
                     }
 
                     if (camRunning) {
-                        runWebcamera.interrupt();
-                        camRunning = false;
+                        doStopWebCam();
                     }
 
-                    motorInterface.doStop();
+                    doStopMotorController();
 
                     appRunning = false;
                 }
 
                 this.appController.doStartController();
-            } while (!this.appController.isConnected());
+            } while (!controllerConnected);
 
         } while (true);
+    }
+
+    /**
+     * Starts the motor controller.
+     */
+    private void doStartMotorController() {
+        this.motorInterface = new MotorInterface();
+        this.motorInterface.start();
+        this.appRunning = true;
+    }
+
+    /**
+     * Start slam-algorithm
+     */
+    private void doStartSlam() {
+        this.lidar.doConnectLidar("/dev/ttyUSB0");
+        this.lidar.setLidarValues(1, 1000);
+        this.lidar.startLidarScan();
+
+        this.slamServer.connect(8002);
+        this.slam.initSlam(motorInterface, lidar.getLidarDevice(), slamServer, 1);
+        slam.start();
+
+        this.slamRunning = true;
+    }
+
+    /**
+     * Starts the webcamera transmission to GUI.
+     */
+    private void doStartWebCam() {
+        this.runWebcamera.start();
+        this.camRunning = true;
+    }
+
+    /**
+     * Stops the motor controller
+     */
+    private void doStopMotorController() {
+        motorInterface.doStop();
+        this.appRunning = false;
+    }
+
+    /**
+     * Stops the SLAM-algorithm
+     */
+    private void doStopSlam() {
+        slam.interrupt();
+        this.slamRunning = false;
+    }
+
+    /**
+     * Stops the webcam transmission to GUI.
+     */
+    private void doStopWebCam() {
+        runWebcamera.interrupt();
+        this.camRunning = false;
     }
 }
