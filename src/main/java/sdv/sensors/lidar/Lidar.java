@@ -35,7 +35,6 @@ public class Lidar {
 
         device.setMotorSpeed(motorSpeed);
         device.setSampleRate(sampleRate);
-
     }
 
     /**
@@ -65,6 +64,13 @@ public class Lidar {
      */
     public SweepDevice getLidarDevice() {
         return device;
+    }
+
+    /**
+     * Closes the LiDAR on shutdown.
+     */
+    public void close() {
+        device.close();
     }
 
 }

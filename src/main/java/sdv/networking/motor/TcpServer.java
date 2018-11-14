@@ -89,6 +89,7 @@ public abstract class TcpServer {
             outToClient.close();
             connectionSocket.close();
             welcomeSocket.close();
+            connected = false;
         }catch(IOException e) {
             e.printStackTrace();
         }

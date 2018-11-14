@@ -205,6 +205,7 @@ public class AppManager {
      */
     private void doStopMotorController() {
         motorInterface.doStop();
+        motorInterface.interrupt();
         this.appRunning = false;
     }
 
@@ -212,7 +213,9 @@ public class AppManager {
      * Stops the SLAM-algorithm
      */
     private void doStopSlam() {
+
         slam.interrupt();
+        lidar.close();
         this.slamRunning = false;
     }
 
