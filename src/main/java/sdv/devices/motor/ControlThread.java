@@ -27,7 +27,7 @@ class ControlThread implements Runnable {
         while (run) {
             //System.out.println("Entering while");
             guiServer.messageFromClient();
-            String text = guiServer.clientString;
+            String text = guiServer.getClientString();
             // String text = keyboard.nextLine();
             String[] guiClientInput = inputParser(text);
 

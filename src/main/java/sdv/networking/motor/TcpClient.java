@@ -146,6 +146,8 @@ public class TcpClient {
 
     public void closeSocket() {
         try {
+            in.close();
+            pw.close();
             clientSocket.close();
         }catch(IOException e) {
             e.printStackTrace();
