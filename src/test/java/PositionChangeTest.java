@@ -5,7 +5,7 @@ import sdv.sensors.lidar.Lidar;
  * Test class for the position change input of SLAM-library
  *
  * @author Ole-martin Steinnes
- */
+ */ /*
 public class PositionChangeTest {
 
     public static void main(String[] args){
@@ -24,3 +24,4 @@ public class PositionChangeTest {
          slam.writeMap();
         }
     }
+*/

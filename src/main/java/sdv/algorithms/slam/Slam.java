@@ -46,6 +46,9 @@ public class Slam extends Thread {
         return (int) (y * MAP_SIZE_PIXELS + x);
     }
 
+    private boolean motorActive;
+    private boolean slamActive;
+
     /**
      * Constructor of the Slam-class.
      */
@@ -65,13 +68,13 @@ public class Slam extends Thread {
     /**
      * Sets up objects used in our SLAM application
      *
-     * @param motorInterface MotorController of the car
      * @param sweepDevice    Sweep LiDAR of the car
      * @param slamServer     Server for transmitting SLAM-map
      * @param lidarSpeed     Motor speed of LiDAR
      */
-    public void initSlam(MotorInterface motorInterface, SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
+    public void initSlam(SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
 
+        this.slamActive = true;
         this.lidarSpeed = lidarSpeed;
 
         if (this.lidarSpeed == 1) {
@@ -82,7 +85,6 @@ public class Slam extends Thread {
             this.sampleLimit = 1060;
         }
 
-        this.motorInterface = motorInterface;
         this.sweepDevice = sweepDevice;
         this.slamServer = slamServer;
 
@@ -106,89 +108,83 @@ public class Slam extends Thread {
      */
     public void run() {
 
+        do {
+            // Loops through samples of each scan
+            for (List<SweepSample> s : sweepDevice.scans()) {
 
-        // Loops through samples of each scan
-        for (List<SweepSample> s : sweepDevice.scans()) {
+                // Int-array of distances in scan.
+                int[] distanceA = new int[this.sampleLimit];
 
-            // Int-array of distances in scan.
-            int[] distanceA = new int[this.sampleLimit];
+                // Scan vector
+                Vector<int[]> scans = new Vector<int[]>();
 
-            // Scan vector
-            Vector<int[]> scans = new Vector<int[]>();
+                // Enter when there is mor than 1059 samples in the scan.
+                if (s.size() > (this.sampleLimit - 1)) {
 
-            // Enter when there is mor than 1059 samples in the scan.
-            if (s.size() > (this.sampleLimit - 1)) {
+                    // For each sample, get distance.
+                    for (int i = 0; i <= (this.sampleLimit - 1); i++) {
+                        int dist = s.get(i).getDistance();
+                        //  System.out.println("Dist(i): " + dist);
+                        distanceA[i] = dist * 10;
+                        //System.out.println("DistA: " + distanceA[i]);
+                    }
+                    //  System.out.println(distanceA);
+                    //  scans.add(distanceA);
 
-                // For each sample, get distance.
-                for (int i = 0; i <= (this.sampleLimit - 1); i++) {
-                    int dist = s.get(i).getDistance();
-                    //  System.out.println("Dist(i): " + dist);
-                    distanceA[i] = dist * 10;
-                    //System.out.println("DistA: " + distanceA[i]);
-                }
-                //  System.out.println(distanceA);
-                //  scans.add(distanceA);
+                    // Add distance to scan vector
+                    scans.addElement(distanceA);
+                    ns = scans.size();
+                    if (motorActive) {
+                        // Encoder one ande two from motor controller.
+                        int enc1, enc2;
 
-                // Add distance to scan vector
-                scans.addElement(distanceA);
-                ns = scans.size();
+                        // String array that holds encoder values.
+                        String[] strings = motorInterface.fetchEncoderData();
+                        // System.out.println("Before IF");
+                        // System.out.println("Strings: " + strings[1]);
+                        // If strings do not contain "no response" we know strings contain
+                        // proper encoder values. Hence, we assign them to PoseChange-object.
+                        if (!strings[1].equalsIgnoreCase("no response")) {
+                            //   System.out.println("In IF");
 
-                // Encoder one ande two from motor controller.
-                int enc1, enc2;
+                            // encoder values
+                            String encoder1 = strings[1];
+                            String encoder2 = strings[3];
 
-                // String array that holds encoder values.
-                String[] strings = motorInterface.fetchEncoderData();
-                // System.out.println("Before IF");
-                // System.out.println("Strings: " + strings[1]);
-                // If strings do not contain "no response" we know strings contain
-                // proper encoder values. Hence, we assign them to PoseChange-object.
-                if (!strings[1].equalsIgnoreCase("no response")) {
-                    //   System.out.println("In IF");
-
-                    // encoder values
-                    String encoder1 = strings[1];
-                    String encoder2 = strings[3];
-
-                    System.out.println();
-                    System.out.println();
-                    System.out.println();
-                    System.out.println("ENKODER1: " + encoder1 + " -- ENKODER2: " + encoder2);
-                    System.out.println();
-
-
-                    // Parsing encoder values from String to int.
-                    enc1 = Integer.parseInt(encoder1);
-                    enc2 = Integer.parseInt(encoder2);
-
-                    //   System.out.println("TIME: " + time);
+                            System.out.println();
+                            System.out.println();
+                            System.out.println();
+                            System.out.println("ENKODER1: " + encoder1 + " -- ENKODER2: " + encoder2);
+                            System.out.println();
 
 
-                    // Computing PoseChange through abstract Robot-class.
-                    poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);
-                    System.out.println(poseChange.toString());
-                    System.out.println();
-                    // System.out.println("1:: " + poseChange.getDxyMm());
-                }
-                // For each scan
-                for (int x = 0; x < ns; x++) {
+                            // Parsing encoder values from String to int.
+                            enc1 = Integer.parseInt(encoder1);
+                            enc2 = Integer.parseInt(encoder2);
 
-                    int[] scan = scans.elementAt(x);
+                            //   System.out.println("TIME: " + time);
 
-                    // Update slam with new scan and position change
-                    slam.update(scan, poseChange);
-                    slam.getmap(mapbytes);
-                    slamServer.sendToClient(mapbytes);
+
+                            // Computing PoseChange through abstract Robot-class.
+                            poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);
+                            System.out.println(poseChange.toString());
+                            System.out.println();
+                        }
+                        // System.out.println("1:: " + poseChange.getDxyMm());
+                    }
+                    // For each scan
+                    for (int x = 0; x < ns; x++) {
+
+                        int[] scan = scans.elementAt(x);
+
+                        // Update slam with new scan and position change
+                        slam.update(scan, poseChange);
+                        slam.getmap(mapbytes);
+                        slamServer.sendToClient(mapbytes);
+                    }
                 }
             }
-
-            // Scan until the thread is interrupted.
-            if (Thread.currentThread().isInterrupted()) {
-                writeMap();
-                sweepDevice.stopScanning();
-                sweepDevice.setMotorSpeed(0);
-                break;
-            }
-        }
+        } while (slamActive);
     }
 
     /**
@@ -222,5 +218,25 @@ public class Slam extends Thread {
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
+    }
+
+    public void doAddMotorInterface(MotorInterface motorInterface) {
+        this.motorInterface = motorInterface;
+        motorActive = true;
+    }
+
+    public void shutDown() {
+        motorActive = false;
+    }
+
+    public boolean getMotorActive() {
+        return motorActive;
+    }
+
+    public void close() {
+        slamActive = false;
+        writeMap();
+        sweepDevice.stopScanning();
+        sweepDevice.setMotorSpeed(0);
     }
 }
