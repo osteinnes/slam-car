@@ -73,6 +73,7 @@ public class AppManager {
     private boolean stopSlamParam;
     private boolean stopWebCamParam;
     private boolean controllerConnected;
+    private boolean disconnectController;
 
     /**
      * Constructor of our application manager
@@ -87,9 +88,6 @@ public class AppManager {
      */
     private void doSetUpApp() {
         this.appController = new AppController();
-        this.lidar = new Lidar();
-
-        this.runWebcamera = new RunWebcamera();
     }
 
     /**
@@ -102,6 +100,7 @@ public class AppManager {
         this.stopMotorControlParam = (this.controlMessage.equalsIgnoreCase("MOTORCONTROLLER:STOP") && this.appRunning);
         this.stopSlamParam = (this.controlMessage.equalsIgnoreCase("SLAM:STOP")&& this.slamRunning);
         this.stopWebCamParam = (this.controlMessage.equalsIgnoreCase("WEBCAM:STOP") && this.camRunning);
+        this.disconnectController = (this.controlMessage.equalsIgnoreCase("STOP"));
         this.controllerConnected = this.appController.isConnected();
     }
 
@@ -142,26 +141,36 @@ public class AppManager {
 
                     doStopWebCam();
 
+                } else if (disconnectController) {
+                    controllerConnected = false;
                 }
             } while (controllerConnected);
 
             do {
 
-                if (appRunning) {
-                    if (slamRunning) {
-                        doStopSlam();
-                    }
 
-                    if (camRunning) {
-                        doStopWebCam();
-                    }
-
-                    doStopMotorController();
-
-                    appRunning = false;
+                if (slamRunning) {
+                    doStopSlam();
                 }
 
-                this.appController.doStartController();
+                if (camRunning) {
+                    doStopWebCam();
+                }
+
+                if (appRunning) {
+                    doStopMotorController();
+                }
+                this.appController.closeController();
+
+                try {
+                    Thread.currentThread().sleep(3000);
+                    this.appController = new AppController();
+                    this.appController.doStartController();
+                    controllerConnected = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             } while (!controllerConnected);
 
         } while (true);
@@ -189,6 +198,7 @@ public class AppManager {
 
         this.slamServer = new SlamServer();
         this.slam = new Slam();
+        this.lidar = new Lidar();
 
         this.lidar.doConnectLidar("/dev/ttyUSB0");
         this.lidar.setLidarValues(1, 1000);
@@ -210,6 +220,7 @@ public class AppManager {
      * Starts the webcamera transmission to GUI.
      */
     private void doStartWebCam() {
+        this.runWebcamera = new RunWebcamera();
         this.runWebcamera.start();
         this.camRunning = true;
     }
@@ -245,6 +256,7 @@ public class AppManager {
      * Stops the webcam transmission to GUI.
      */
     private void doStopWebCam() {
+        runWebcamera.stopCam();
         runWebcamera.interrupt();
         this.camRunning = false;
     }

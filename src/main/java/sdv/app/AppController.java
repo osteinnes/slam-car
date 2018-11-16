@@ -33,11 +33,19 @@ public class AppController {
     /**
      * Activates the socket-connection with the GUI.
      */
-    public void doStartController() {
+    public boolean doStartController() {
+
+        boolean status;
+
         if (!this.guiController.connected) {
             System.out.println("Waiting for connection from GUI-controller.");
             this.guiController.connect(8003);
+            status = true;
+        } else {
+            status = false;
         }
+
+        return status;
     }
 
     public boolean isConnected() {
@@ -47,5 +55,9 @@ public class AppController {
     public String getControlMsg() {
         this.guiController.messageFromClient();
         return this.guiController.getClientString();
+    }
+
+    public void closeController() {
+        this.guiController.closeSocket();
     }
 }

@@ -16,6 +16,7 @@ import java.net.*;
 public class StreamVideo {
     // UDP DatagramSocket.
     private DatagramSocket socket;
+    private ByteArrayOutputStream baos;
 
 
     public StreamVideo(int localPort) {
@@ -62,17 +63,24 @@ public class StreamVideo {
      * @throws IOException Something with flush method.
      */
     public void doSendImage(BufferedImage image) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "jpg", baos);
-        baos.flush();
+        baos = new ByteArrayOutputStream();
+        if (image != null) {
+            ImageIO.write(image, "jpg", baos);
+            baos.flush();
 
-        byte[] buffer = baos.toByteArray();
+            byte[] buffer = baos.toByteArray();
 
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-        this.socket.send(packet);
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+            this.socket.send(packet);
+        }
     }
 
     public void closeSocket() {
+        try {
+            this.baos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.socket.close();
     }
 }

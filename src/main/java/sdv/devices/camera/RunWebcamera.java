@@ -10,13 +10,16 @@ import java.io.IOException;
  */
 public class RunWebcamera extends Thread {
 
+    private volatile boolean camRunning;
+
     @Override
     public void run() {
 
         StreamVideo streamVideo = new StreamVideo(8001);
         WebCam readWebcam = new WebCam();
+        camRunning = true;
 
-        while (true) {
+        while (camRunning) {
 
             if(!streamVideo.getIsConnected()) {
                 streamVideo.doConnect();
@@ -35,5 +38,14 @@ public class RunWebcamera extends Thread {
                 streamVideo.closeSocket();
             }
         }
+
+        readWebcam.close();
+        streamVideo.closeSocket();
+
+
+    }
+
+    public void stopCam() {
+        camRunning = false;
     }
 }

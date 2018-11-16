@@ -151,11 +151,7 @@ public class Slam extends Thread {
                             String encoder1 = strings[1];
                             String encoder2 = strings[3];
 
-                            System.out.println();
-                            System.out.println();
-                            System.out.println();
-                            System.out.println("ENKODER1: " + encoder1 + " -- ENKODER2: " + encoder2);
-                            System.out.println();
+
 
 
                             // Parsing encoder values from String to int.
@@ -167,7 +163,9 @@ public class Slam extends Thread {
 
                             // Computing PoseChange through abstract Robot-class.
                             poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);
-                            System.out.println(poseChange.toString());
+                            if (poseChange.getDtSeconds() > 2.0) {
+                                System.out.println(poseChange.getDtSeconds());
+                            }
                             System.out.println();
                         }
                         // System.out.println("1:: " + poseChange.getDxyMm());

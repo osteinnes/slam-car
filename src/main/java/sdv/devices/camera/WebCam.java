@@ -47,4 +47,8 @@ public class WebCam {
     public BufferedImage doGetImage() {
         return webcam.getImage();
     }
+
+    public void close() {
+        webcam.close();
+    }
 }
