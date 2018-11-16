@@ -124,42 +124,33 @@ public class Slam extends Thread {
                     // For each sample, get distance.
                     for (int i = 0; i <= (this.sampleLimit - 1); i++) {
                         int dist = s.get(i).getDistance();
-                        //  System.out.println("Dist(i): " + dist);
+
                         distanceA[i] = dist * 10;
-                        //System.out.println("DistA: " + distanceA[i]);
+
                     }
-                    //  System.out.println(distanceA);
-                    //  scans.add(distanceA);
 
                     // Add distance to scan vector
                     scans.addElement(distanceA);
                     ns = scans.size();
                     if (motorActive) {
+
                         // Encoder one ande two from motor controller.
                         int enc1, enc2;
 
                         // String array that holds encoder values.
                         String[] strings = motorInterface.fetchEncoderData();
-                        // System.out.println("Before IF");
-                        // System.out.println("Strings: " + strings[1]);
+
                         // If strings do not contain "no response" we know strings contain
                         // proper encoder values. Hence, we assign them to PoseChange-object.
                         if (!strings[1].equalsIgnoreCase("no response")) {
-                            //   System.out.println("In IF");
 
                             // encoder values
                             String encoder1 = strings[1];
                             String encoder2 = strings[3];
 
-
-
-
                             // Parsing encoder values from String to int.
                             enc1 = Integer.parseInt(encoder1);
                             enc2 = Integer.parseInt(encoder2);
-
-                            //   System.out.println("TIME: " + time);
-
 
                             // Computing PoseChange through abstract Robot-class.
                             poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);
@@ -168,7 +159,6 @@ public class Slam extends Thread {
                             }
                             System.out.println();
                         }
-                        // System.out.println("1:: " + poseChange.getDxyMm());
                     }
                     // For each scan
                     for (int x = 0; x < ns; x++) {
@@ -218,19 +208,36 @@ public class Slam extends Thread {
         }
     }
 
+    /**
+     * Adds a motor interface to SLAM when there is a motor controller
+     * active on the car. This is controller from the GUI, through the AppController
+     * used in AppManager.
+     *
+     * @param motorInterface interface between GUI and Python-server.
+     */
     public void doAddMotorInterface(MotorInterface motorInterface) {
         this.motorInterface = motorInterface;
         motorActive = true;
     }
 
+    /**
+     * Shuts down the MotorInterface-instance currently used when shutting down.
+     */
     public void shutDown() {
         motorActive = false;
     }
 
+    /**
+     * Returns the motor controller status of the app. Whether it is active or not.
+     * @return the motor controller status of the app. Whether it is active or not.
+     */
     public boolean getMotorActive() {
         return motorActive;
     }
 
+    /**
+     * Sets SLAM inactive, writes SLAM-map, and stops LiDAR-scan.
+     */
     public void close() {
         slamActive = false;
         writeMap();

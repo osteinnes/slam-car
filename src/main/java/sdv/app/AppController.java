@@ -48,15 +48,28 @@ public class AppController {
         return status;
     }
 
+    /**
+     * Returns connection status of the GUI-controller
+     *
+     * @return connection status of the GUI-controller
+     */
     public boolean isConnected() {
         return this.guiController.connected;
     }
 
+    /**
+     * Returns control message from the GUI-controller
+     *
+     * @return control message from the GUI-controller
+     */
     public String getControlMsg() {
         this.guiController.messageFromClient();
         return this.guiController.getClientString();
     }
 
+    /**
+     * Closes the GUI-controller on disconnection.
+     */
     public void closeController() {
         this.guiController.closeSocket();
     }
