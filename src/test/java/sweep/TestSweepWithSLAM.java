@@ -1,4 +1,4 @@
-package sweep;
+/*package sweep;
 
 import edu.wlu.cs.levy.breezyslam.algorithms.*;
 import edu.wlu.cs.levy.breezyslam.components.*;
@@ -17,7 +17,7 @@ import java.util.Vector;
  * Testing functionality of SLAM and Sweep Scanse LiDAR combined.
  *
  * @author Ole-martin Steinnes
- */
+ */ /*
 public class TestSweepWithSLAM {
 
     private static int MAP_SIZE_PIXELS = 820;
@@ -139,4 +139,4 @@ public class TestSweepWithSLAM {
         }
 
     }
-}
+} */

@@ -14,14 +14,18 @@ public abstract class TcpServer {
 
     // True when connected to GUI, false otherwise.
     public Boolean connected;
+
     // Message from client
-    BufferedReader inFromClient;
+    protected BufferedReader inFromClient;
+
     // Message to client
-    DataOutputStream outToClient;
+    protected DataOutputStream outToClient;
+
     // String from client
-    public String clientString;
+    protected String clientString;
+
     // Request from client
-    String clientRequest;
+    protected String clientRequest;
 
     private ServerSocket welcomeSocket;
 
@@ -33,6 +37,7 @@ public abstract class TcpServer {
     public TcpServer() {
         connected = false;
     }
+
 
     /**
      * Listens to a socket at port 8000. Accepts a connection and reads client input.
@@ -73,11 +78,18 @@ public abstract class TcpServer {
         return clientString;
     }
 
+    public String getClientRequest() {
+        return clientRequest;
+    }
+
     public void closeSocket() {
         try {
+
+            inFromClient.close();
+            outToClient.close();
             connectionSocket.close();
             welcomeSocket.close();
-            inFromClient.reset();
+            connected = false;
         }catch(IOException e) {
             e.printStackTrace();
         }
