@@ -80,7 +80,7 @@ public class Slam extends Thread {
         if (this.lidarSpeed == 1) {
             this.sampleLimit = 1060;
         } else if (this.lidarSpeed == 2) {
-            this.sampleLimit = 513;
+            this.sampleLimit = 530;
         } else {
             this.sampleLimit = 1060;
         }
@@ -97,9 +97,9 @@ public class Slam extends Thread {
                 1, 0.1);
 
         // new SLAM library
-        slam = new RMHCSLAM(myLidar, 820, 40, HOLE_WIDTH_MM);
+        slam = new RMHCSLAM(myLidar, 820, 30, HOLE_WIDTH_MM);
 
-        robot = new Robot(30, 140);
+        robot = new Robot(30, 110);
     }
 
 

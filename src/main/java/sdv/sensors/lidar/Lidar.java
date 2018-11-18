@@ -22,8 +22,19 @@ public class Lidar {
      *
      * @param port port Lidar is connected to
      */
-    public void doConnectLidar(String port) {
-        this.device = new SweepDevice(port);
+    public boolean doConnectLidar(String port) {
+
+        boolean lidarConnected;
+
+        try {
+            this.device = new SweepDevice(port);
+            lidarConnected = true;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            lidarConnected = false;
+        }
+
+        return lidarConnected;
     }
 
     /**

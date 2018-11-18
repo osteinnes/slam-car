@@ -1,6 +1,7 @@
 package sdv.app;
 
 
+import javafx.application.Platform;
 import sdv.algorithms.slam.Slam;
 import sdv.devices.camera.RunWebcamera;
 import sdv.devices.motor.MotorInterface;
@@ -108,11 +109,19 @@ public class AppManager {
      * Main logic of our program
      */
     private void doProgramLogic() {
+        long k = System.currentTimeMillis();
         do {
+
+
 
             do {
 
                 this.controlMessage = this.appController.getControlMsg();
+
+                if ((k + 3000) < System.currentTimeMillis()) {
+                    System.out.println(" Thread count: " + java.lang.Thread.activeCount());
+                    k = System.currentTimeMillis();
+                }
 
                 doCreateBooleanParam();
                 System.out.println("DEBUG STRING: " + this.controlMessage);
@@ -142,6 +151,7 @@ public class AppManager {
                     doStopWebCam();
 
                 } else if (disconnectController) {
+                    System.out.println("Disconnecting controllers.");
                     controllerConnected = false;
                 }
             } while (controllerConnected);
@@ -151,19 +161,25 @@ public class AppManager {
 
                 if (slamRunning) {
                     doStopSlam();
+                    System.out.println("SLAM stopped");
                 }
 
                 if (camRunning) {
                     doStopWebCam();
+                    System.out.println("Webcam stopped.");
                 }
 
                 if (appRunning) {
                     doStopMotorController();
+                    System.out.println("Motor controller stopped.");
                 }
+
                 this.appController.closeController();
+                System.out.println("AppController closed.");
 
                 try {
                     Thread.currentThread().sleep(3000);
+                    System.out.println("Delay 3 sec, restarting AppController");
                     this.appController = new AppController();
                     this.appController.doStartController();
                     controllerConnected = true;
@@ -200,20 +216,21 @@ public class AppManager {
         this.slam = new Slam();
         this.lidar = new Lidar();
 
-        this.lidar.doConnectLidar("/dev/ttyUSB0");
-        this.lidar.setLidarValues(1, 1000);
-        this.lidar.startLidarScan();
+        if (this.lidar.doConnectLidar("/dev/ttyUSB0")) {
+            this.lidar.setLidarValues(1, 1000);
+            this.lidar.startLidarScan();
 
-        this.slamServer.connect(8002);
-        this.slam.initSlam(lidar.getLidarDevice(), slamServer, 1);
+            this.slamServer.connect(8002);
+            this.slam.initSlam(lidar.getLidarDevice(), slamServer, 1);
 
-        if (appRunning && !slam.getMotorActive()) {
-            slam.doAddMotorInterface(this.motorInterface);
+            if (appRunning && !slam.getMotorActive()) {
+                slam.doAddMotorInterface(this.motorInterface);
+            }
+
+            slam.start();
+
+            this.slamRunning = true;
         }
-
-        slam.start();
-
-        this.slamRunning = true;
     }
 
     /**
@@ -243,7 +260,6 @@ public class AppManager {
      * Stops the SLAM-algorithm
      */
     private void doStopSlam() {
-
         slam.shutDown();
         slam.close();
         slam.interrupt();
