@@ -3,6 +3,8 @@ package sdv.networking.slam;
 import sdv.networking.motor.SlamServer;
 
 /**
+ *
+ *
  * @author Ole-martin Steinnes
  */
 public class SlamMapStream extends Thread {

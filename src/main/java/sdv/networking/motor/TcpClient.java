@@ -24,46 +24,47 @@ public class TcpClient {
     /**
      * Constructor of the TcpClient-class. Sets connected false initially.
      */
-    public TcpClient(){
+    public TcpClient() {
         connected = false;
     }
 
-    /**replaceAll
+    /**
+     * replaceAll
      * Connects to the local Python-server.
-     *
+     * <p>
      * Returns connected status
+     *
      * @return connected status
      */
-    public boolean connect(){
+    public boolean connect() {
         try {
-            if(!connected) {
+            if (!connected) {
                 clientSocket = new Socket("localhost", 2004);
                 System.out.println("Connected to server at " + clientSocket.getRemoteSocketAddress());
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 pw = new PrintWriter(clientSocket.getOutputStream(), true);
                 connected = true;
             }
-        }
-        catch (IOException ex){
+        } catch (IOException ex) {
             System.out.println(ex.toString());
         }
         return connected;
     }
 
 
-    public void messageFromServer(){
+    public void messageFromServer() {
         try {
-                     serverResponse = in.readLine();
-                      if(serverResponse != null) {
-                         // serverResponse = serverResponse.replaceAll("\\p{P}","");
-                          response = serverResponse.split(":");
-                          //System.out.println("From server " + serverResponse);
-                      }
-                      else{
-                          System.out.println("No response");
-                    }
-              }
-        catch (IOException ex){
+            if (in.ready()) {
+                serverResponse = in.readLine();
+                // serverResponse = serverResponse.replaceAll("\\p{P}","");
+                response = serverResponse.split(":");
+                //System.out.println("From server " + serverResponse);
+
+            } else {
+                System.out.println("No response");
+                response = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
+            }
+        } catch (IOException ex) {
             System.out.println(ex.toString());
         }
     }
@@ -79,7 +80,7 @@ public class TcpClient {
     /**
      * Sends request to get motor speed from the server.
      */
-    public void sendMotorSpeedRequest(){
+    public void sendMotorSpeedRequest() {
         //System.out.println("Sending Motorspeed Request");
         pw.println("getMotorSpeed");
     }
@@ -90,7 +91,7 @@ public class TcpClient {
      *
      * @param motor1Speed desired speed for motor 1
      */
-    public void setForwardMotor1Speed(int motor1Speed){
+    public void setForwardMotor1Speed(int motor1Speed) {
         //System.out.println("Sending Set Motorspeed Request");
         String payload = "setforwardspeedmotorone." + "motorone:" + motor1Speed;
         //System.out.println(payload);
@@ -103,7 +104,7 @@ public class TcpClient {
      *
      * @param motor2Speed desired speed for motor 2
      */
-    public void setForwardMotor2Speed(int motor2Speed){
+    public void setForwardMotor2Speed(int motor2Speed) {
         //System.out.println("Sending Set Motorspeed Request");
         String payload = "setforwardspeedmotortwo." + "motortwo:" + motor2Speed;
         //System.out.println(payload);
@@ -116,7 +117,7 @@ public class TcpClient {
      *
      * @param motor1Speed desired speed for Motor 1
      */
-    public void setBackwardMotor1Speed(int motor1Speed){
+    public void setBackwardMotor1Speed(int motor1Speed) {
         //System.out.println("Sending Set Motorspeed Request");
         String payload = "setbackwardspeedmotorone." + "motorone:" + motor1Speed;
         //System.out.println(payload);
@@ -129,7 +130,7 @@ public class TcpClient {
      *
      * @param motor2Speed desired speed for motor 2
      */
-    public void setBackwardMotor2Speed(int motor2Speed){
+    public void setBackwardMotor2Speed(int motor2Speed) {
         //System.out.println("Sending Set Motorspeed Request");
         String payload = "setbackwardspeedmotortwo." + "motortwo:" + motor2Speed;
         //System.out.println(payload);
@@ -149,7 +150,7 @@ public class TcpClient {
             in.close();
             pw.close();
             clientSocket.close();
-        }catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
