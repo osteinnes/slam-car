@@ -98,7 +98,7 @@ public class Slam extends Thread {
                 1, 0.1);
 
         // new SLAM library
-        slam = new RMHCSLAM(myLidar, 820, 30, HOLE_WIDTH_MM);
+        slam = new RMHCSLAM(myLidar, 820, 30, 1337);
 
         robot = new Robot(30, 110);
     }
@@ -161,6 +161,9 @@ public class Slam extends Thread {
                             // Parsing encoder values from String to int.
                             enc1 = Integer.parseInt(encoder1);
                             enc2 = Integer.parseInt(encoder2);
+
+                            System.out.println("Enc1: " + enc1 + " Enc2: " + enc2);
+                            System.out.println();
 
                             // Computing PoseChange through abstract Robot-class.
                             poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);

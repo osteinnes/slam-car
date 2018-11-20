@@ -3,7 +3,8 @@ package sdv.networking.slam;
 import sdv.networking.motor.SlamServer;
 
 /**
- *
+ * SlamMapStream contains a TCP-server that accepts connections
+ * on socket from GUI. Extends thread and
  *
  * @author Ole-martin Steinnes
  */
@@ -15,7 +16,7 @@ public class SlamMapStream extends Thread {
 
     private byte[] mapbytes;
 
-    private volatile boolean newMap;
+    private boolean newMap;
 
     public SlamMapStream(int port, int mapSizePixels) {
         setUpMapStream(port);
@@ -28,6 +29,8 @@ public class SlamMapStream extends Thread {
         while (true) {
             if (newMap) {
                 slamServer.sendToClient(mapbytes);
+                System.out.println("Uploading new map!");
+                System.out.println();
                 newMap = false;
             }
         }

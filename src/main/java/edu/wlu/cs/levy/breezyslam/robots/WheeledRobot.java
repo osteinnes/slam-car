@@ -82,6 +82,8 @@ public abstract class WheeledRobot
             left_diff_degrees = (odometry.left_wheel_encoder - left_wheel_encoder_prev)*(360.0/8400.0);
             right_diff_degrees = (odometry.right_wheel_encoder - right_wheel_encoder_prev)*(360.0/8400.0);
 
+            System.out.println("LDD: " + left_diff_degrees + " RDD: " + right_diff_degrees);
+
             // Calculating change in time.
             dxy_mm =  this.wheel_radius_mm * (Math.toRadians(left_diff_degrees) + Math.toRadians(right_diff_degrees));
             dtheta_degrees = this.wheel_radius_mm / this.half_axle_length_mm * (right_diff_degrees - left_diff_degrees) * 0.6;
