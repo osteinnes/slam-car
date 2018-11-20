@@ -1,34 +1,22 @@
 package sdv.tools;
 
 public class StorageBox {
-    private String[] currentResponse;
+    private volatile String[] str;
     private boolean run;
-    private volatile boolean read;
 
-    public StorageBox(){
-        this.run = false;
-        this.read = false;
+    public StorageBox() {
+        str = new String[4];
     }
+
 
     public void setValue(String[] currentString) {
-        this.currentResponse = currentString;
+        this.str = currentString;
     }
 
-    public String[] getValue(){
-        return currentResponse;
+    public String[] getValue() {
+        return str;
     }
-    public void setRun(boolean run){
-        this.run = run;
-    }
-    public boolean getRun(){
-        return run;
-    }
-
-    public void setRead(boolean read){
-        this.read = read;
-    }
-    public boolean getRead(){
-        return read;
-    }
-
 }
+
+
+

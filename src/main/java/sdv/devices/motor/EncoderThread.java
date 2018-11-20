@@ -1,33 +1,36 @@
 package sdv.devices.motor;
 
-import sdv.algorithms.tools.StorageBox;
+import sdv.tools.StorageBox;
 import sdv.networking.motor.TcpClient;
 
+import static java.lang.Thread.sleep;
 
-public class EncoderThread implements Runnable{
+
+public class EncoderThread implements Runnable {
     private TcpClient pythonClient;
     private MotorCommands motorCommands;
     private StorageBox box;
 
 
-    public EncoderThread(TcpClient tcpClient, MotorCommands motorCommands, StorageBox box){
+    public EncoderThread(TcpClient tcpClient, MotorCommands motorCommands, StorageBox box) {
         this.pythonClient = tcpClient;
         this.motorCommands = motorCommands;
         this.box = box;
     }
 
     @Override
-    public void run(){
-        while(true)
-            if(box.getRun()) {
-                box.setValue(getEncoder());
-                box.setRun(false);
-                box.setRead(true);
+    public void run() {
+        while (true) {
+            box.setValue(getEncoder());
+            try {
+                sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
     }
 
     /**
-     *
      * @return
      **/
 
@@ -35,7 +38,7 @@ public class EncoderThread implements Runnable{
         String[] strings;
         motorCommands.getEncoderData();
         pythonClient.messageFromServer();
-        if(!pythonClient.response[1].contains("FAILED") && !pythonClient.response[3].contains("FAILED")) {
+        if (!pythonClient.response[1].contains("FAILED") && !pythonClient.response[3].contains("FAILED")) {
             //System.out.println("Encoder1: " + pythonClient2.response[1]);
             //System.out.println("Encoder2: " + pythonClient2.response[3]);
             strings = pythonClient.response;

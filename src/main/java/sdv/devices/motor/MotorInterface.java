@@ -1,6 +1,6 @@
 package sdv.devices.motor;
 
-import sdv.algorithms.tools.StorageBox;
+import sdv.tools.StorageBox;
 import sdv.networking.motor.GuiServer;
 import sdv.networking.motor.TcpClient;
 
@@ -67,8 +67,6 @@ public class MotorInterface extends Thread {
         cThread = new Thread(controlThread);
         cThread.setDaemon(true);
         cThread.setPriority(2);
-        //this.encoderThread.setDaemon(true);
-        //this.encoderThread.setPriority(6);
         encoderThread = new EncoderThread(pythonClient,motorCommands, box);
         eThread = new Thread(encoderThread);
         eThread.setDaemon(true);

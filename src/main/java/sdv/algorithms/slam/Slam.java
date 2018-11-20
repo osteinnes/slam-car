@@ -6,6 +6,7 @@ import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
 import sdv.devices.motor.MotorInterface;
 import sdv.networking.slam.SlamMapStream;
+import sdv.tools.StorageBox;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -27,8 +28,9 @@ public class Slam extends Thread {
     private Robot robot;
     private SlamMapStream slamMapStream;
 
-    private MotorInterface motorInterface;
     private SweepDevice sweepDevice;
+
+    private StorageBox storageBox;
 
     private int lidarSpeed;
     private int sampleLimit;
@@ -71,11 +73,11 @@ public class Slam extends Thread {
      * @param sweepDevice    Sweep LiDAR of the car
      * @param lidarSpeed     Motor speed of LiDAR
      */
-    public void initSlam(SweepDevice sweepDevice, int lidarSpeed) {
+    public void initSlam(SweepDevice sweepDevice, int lidarSpeed, StorageBox storageBox) {
 
         this.slamActive = true;
         this.lidarSpeed = lidarSpeed;
-
+        this.storageBox = storageBox;
         this.slamMapStream = new SlamMapStream(8002, MAP_SIZE_PIXELS);
         this.slamMapStream.start();
 
@@ -144,8 +146,10 @@ public class Slam extends Thread {
                         System.out.println("About to fetch encoderdata");
                         System.out.println();
 
+                        // Fetch encoder data
+
                         // String array that holds encoder values.
-                        String[] strings = motorInterface.fetchEncoderData();
+                        String[] strings = storageBox.getValue();
 
                         System.out.println("Fetched encoderdata");
                         System.out.println();
