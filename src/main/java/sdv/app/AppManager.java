@@ -44,9 +44,7 @@ public class AppManager {
     // For motor controls and encoder data.
     private MotorInterface motorInterface;
 
-    // A SLAM server that computes the SLAM-algorithm and can
-    // transmit the SLAM-map through a TCP connection to GUI.
-    private SlamServer slamServer;
+
 
     // Representation of a Scanse LiDAR
     private Lidar lidar;
@@ -211,8 +209,6 @@ public class AppManager {
      */
     private void doStartSlam() {
 
-
-        this.slamServer = new SlamServer();
         this.slam = new Slam();
         this.lidar = new Lidar();
 
@@ -220,8 +216,7 @@ public class AppManager {
             this.lidar.setLidarValues(1, 1000);
             this.lidar.startLidarScan();
 
-            this.slamServer.connect(8002);
-            this.slam.initSlam(lidar.getLidarDevice(), slamServer, 1);
+            this.slam.initSlam(lidar.getLidarDevice(), 1);
 
             if (appRunning && !slam.getMotorActive()) {
                 slam.doAddMotorInterface(this.motorInterface);
@@ -264,7 +259,6 @@ public class AppManager {
         slam.close();
         slam.interrupt();
         lidar.close();
-        slamServer.closeSocket();
         this.slamRunning = false;
     }
 

@@ -5,7 +5,7 @@ import edu.wlu.cs.levy.breezyslam.components.*;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
 import sdv.devices.motor.MotorInterface;
-import sdv.networking.motor.SlamServer;
+import sdv.networking.slam.SlamMapStream;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -24,8 +24,8 @@ public class Slam extends Thread {
     private RMHCSLAM slam;
     private PoseChange poseChange;
 
-    private SlamServer slamServer;
     private Robot robot;
+    private SlamMapStream slamMapStream;
 
     private MotorInterface motorInterface;
     private SweepDevice sweepDevice;
@@ -69,13 +69,15 @@ public class Slam extends Thread {
      * Sets up objects used in our SLAM application
      *
      * @param sweepDevice    Sweep LiDAR of the car
-     * @param slamServer     Server for transmitting SLAM-map
      * @param lidarSpeed     Motor speed of LiDAR
      */
-    public void initSlam(SweepDevice sweepDevice, SlamServer slamServer, int lidarSpeed) {
+    public void initSlam(SweepDevice sweepDevice, int lidarSpeed) {
 
         this.slamActive = true;
         this.lidarSpeed = lidarSpeed;
+
+        this.slamMapStream = new SlamMapStream(8002, MAP_SIZE_PIXELS);
+        this.slamMapStream.start();
 
         if (this.lidarSpeed == 1) {
             this.sampleLimit = 1060;
@@ -86,7 +88,6 @@ public class Slam extends Thread {
         }
 
         this.sweepDevice = sweepDevice;
-        this.slamServer = slamServer;
 
         // new position change object.
         poseChange = new PoseChange();
@@ -118,8 +119,11 @@ public class Slam extends Thread {
                 // Scan vector
                 Vector<int[]> scans = new Vector<int[]>();
 
+
                 // Enter when there is mor than 1059 samples in the scan.
                 if (s.size() > (this.sampleLimit - 1)) {
+
+                    System.out.println("Enterd IF with " + s.size() + " samples");
 
                     // For each sample, get distance.
                     for (int i = 0; i <= (this.sampleLimit - 1); i++) {
@@ -137,8 +141,14 @@ public class Slam extends Thread {
                         // Encoder one ande two from motor controller.
                         int enc1, enc2;
 
+                        System.out.println("About to fetch encoderdata");
+                        System.out.println();
+
                         // String array that holds encoder values.
                         String[] strings = motorInterface.fetchEncoderData();
+
+                        System.out.println("Fetched encoderdata");
+                        System.out.println();
 
                         // If strings do not contain "no response" we know strings contain
                         // proper encoder values. Hence, we assign them to PoseChange-object.
@@ -157,21 +167,32 @@ public class Slam extends Thread {
                             if (poseChange.getDtSeconds() > 2.0) {
                                 System.out.println(poseChange.getDtSeconds());
                             }
+                            System.out.println("PoseChange updated!");
                             System.out.println();
                         }
                     }
                     // For each scan
                     for (int x = 0; x < ns; x++) {
 
+                        System.out.println("Before scans.elementAt(x)");
+                        System.out.println();
                         int[] scan = scans.elementAt(x);
+                        System.out.println("After scans.elementAt(x)");
+                        System.out.println();
+
+                        System.out.println("Slam updated!");
+                        System.out.println();
 
                         // Update slam with new scan and position change
                         slam.update(scan, poseChange);
                         slam.getmap(mapbytes);
-                        slamServer.sendToClient(mapbytes);
+                        slamMapStream.setByteMap(mapbytes);
                     }
                 }
             }
+
+            System.out.println("slamActive: " + slamActive);
+
         } while (slamActive);
     }
 
@@ -240,6 +261,8 @@ public class Slam extends Thread {
      */
     public void close() {
         slamActive = false;
+        slamMapStream.stopMapStream();
+        slamMapStream.interrupt();
         writeMap();
         sweepDevice.stopScanning();
         sweepDevice.setMotorSpeed(0);
