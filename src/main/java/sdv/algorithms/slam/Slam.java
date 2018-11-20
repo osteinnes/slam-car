@@ -236,17 +236,7 @@ public class Slam extends Thread {
         }
     }
 
-    /**
-     * Adds a motor interface to SLAM when there is a motor controller
-     * active on the car. This is controller from the GUI, through the AppController
-     * used in AppManager.
-     *
-     * @param motorInterface interface between GUI and Python-server.
-     */
-    public void doAddMotorInterface(MotorInterface motorInterface) {
-        this.motorInterface = motorInterface;
-        motorActive = true;
-    }
+
 
     /**
      * Shuts down the MotorInterface-instance currently used when shutting down.

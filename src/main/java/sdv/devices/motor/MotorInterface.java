@@ -1,8 +1,8 @@
 package sdv.devices.motor;
 
 import sdv.tools.StorageBox;
-import sdv.networking.motor.GuiServer;
-import sdv.networking.motor.TcpClient;
+import sdv.networking.GuiServer;
+import sdv.networking.TcpClient;
 
 public class MotorInterface extends Thread {
     // Object containing the pythonClient

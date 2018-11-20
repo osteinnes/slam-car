@@ -1,6 +1,6 @@
 package sdv.devices.motor;
 
-import sdv.networking.motor.TcpClient;
+import sdv.networking.TcpClient;
 
 /**
  * MotorCommand class. Generalizes commands for motor controll

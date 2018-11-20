@@ -1,6 +1,6 @@
 package sdv.app;
 
-import sdv.networking.motor.GuiServer;
+import sdv.networking.GuiServer;
 
 /**
  * The AppController-class creates an interface with our GUI. The GUI

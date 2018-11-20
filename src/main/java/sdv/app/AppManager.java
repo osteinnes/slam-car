@@ -1,11 +1,9 @@
 package sdv.app;
 
 
-import javafx.application.Platform;
 import sdv.algorithms.slam.Slam;
 import sdv.devices.camera.RunWebcamera;
 import sdv.devices.motor.MotorInterface;
-import sdv.networking.motor.SlamServer;
 import sdv.sensors.lidar.Lidar;
 import sdv.tools.StorageBox;
 

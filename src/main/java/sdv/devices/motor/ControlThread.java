@@ -1,7 +1,7 @@
 package sdv.devices.motor;
 
-import sdv.networking.motor.GuiServer;
-import sdv.networking.motor.TcpClient;
+import sdv.networking.GuiServer;
+import sdv.networking.TcpClient;
 
 class ControlThread implements Runnable {
 

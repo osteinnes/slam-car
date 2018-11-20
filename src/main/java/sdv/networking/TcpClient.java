@@ -1,4 +1,4 @@
-package sdv.networking.motor;
+package sdv.networking;
 
 import java.io.*;
 import java.net.Socket;

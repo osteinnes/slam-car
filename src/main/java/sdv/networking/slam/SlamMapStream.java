@@ -1,6 +1,6 @@
 package sdv.networking.slam;
 
-import sdv.networking.motor.SlamServer;
+import sdv.networking.SlamServer;
 
 /**
  * SlamMapStream contains a TCP-server that accepts connections
