@@ -1,5 +1,6 @@
 package sdv.devices.motor;
 
+import sdv.algorithms.tools.StorageBox;
 import sdv.networking.motor.GuiServer;
 import sdv.networking.motor.TcpClient;
 
@@ -17,19 +18,23 @@ public class MotorInterface extends Thread {
     //Threads containing controls for motor and encoder
     private ControlThread controlThread;
     private EncoderThread encoderThread;
-    private Thread thread;
+    private Thread cThread;
+    private Thread eThread;
 
-    public MotorInterface() {
+    //Storage box
+    private StorageBox box;
+
+    public MotorInterface(StorageBox box) {
         setUpFields();
         setUpConnection();
         setUpThreads();
+        this.box = box;
     }
 
     public void run() {
         try {
-            thread.start();
-            this.encoderThread.start();
-
+            eThread.start();
+            cThread.start();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -59,12 +64,16 @@ public class MotorInterface extends Thread {
 
     private void setUpThreads() {
         controlThread = new ControlThread(pythonClient, motorCommands, guiServer);
-        thread = new Thread(controlThread);
-        thread.setDaemon(true);
-        thread.setPriority(2);
-        encoderThread = new EncoderThread(pythonClient,motorCommands);
-        this.encoderThread.setDaemon(true);
-        this.encoderThread.setPriority(6);
+        cThread = new Thread(controlThread);
+        cThread.setDaemon(true);
+        cThread.setPriority(2);
+        //this.encoderThread.setDaemon(true);
+        //this.encoderThread.setPriority(6);
+        encoderThread = new EncoderThread(pythonClient,motorCommands, box);
+        eThread = new Thread(encoderThread);
+        eThread.setDaemon(true);
+        eThread.setPriority(6);
+
     }
 
     public String[] fetchEncoderData(){
@@ -75,7 +84,7 @@ public class MotorInterface extends Thread {
         motorCommands.stop();
         guiServer.closeSocket();
         pythonClient.closeSocket();
-        thread.interrupt();
-        this.encoderThread.interrupt();
+        cThread.interrupt();
+        eThread.interrupt();
     }
 }
