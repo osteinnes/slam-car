@@ -15,7 +15,7 @@ public class SlamMapStream extends Thread {
 
     private byte[] mapbytes;
 
-    private boolean newMap;
+    private volatile boolean newMap;
 
     public SlamMapStream(int port, int mapSizePixels) {
         setUpMapStream(port);

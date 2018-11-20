@@ -26,7 +26,7 @@ public class RunWebcamera extends Thread {
             }
 
             try {
-                sleep(3);
+                sleep(10);
                 streamVideo.doSendImage(readWebcam.doGetImage());
             } catch (IOException e) {
                 e.printStackTrace();

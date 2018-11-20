@@ -100,7 +100,7 @@ public class Slam extends Thread {
         // new SLAM library
         slam = new RMHCSLAM(myLidar, 820, 30, HOLE_WIDTH_MM);
 
-        robot = new Robot(30, 90);
+        robot = new Robot(30, 110);
     }
 
 
