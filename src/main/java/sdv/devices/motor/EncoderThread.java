@@ -3,8 +3,6 @@ package sdv.devices.motor;
 import sdv.tools.boxes.EncoderBox;
 import sdv.networking.motor.MotorClient;
 
-import static java.lang.Thread.sleep;
-
 
 public class EncoderThread implements Runnable {
     private MotorClient pythonClient;
@@ -22,14 +20,19 @@ public class EncoderThread implements Runnable {
     public void run() {
         box.start();
         while (true) {
-                String[] s = getEncoder();
-                box.setValue(s);
+
+            long time = System.currentTimeMillis();
+            String[] s = getEncoder();
+            box.setValue(s);
+            System.out.println("Time since getEncoder(): " + (System.currentTimeMillis() - time));
 
             try {
-                sleep(999);
+                Thread.sleep(999);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            System.out.println("After sleep: " + (System.currentTimeMillis() - time));
         }
     }
 

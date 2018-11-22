@@ -137,15 +137,26 @@ public class Slam extends Thread {
                     // Add distance to scan vector
                     scans.addElement(distanceA);
                     ns = scans.size();
+
+                    long debugTime = System.currentTimeMillis();
+                    System.out.println();
+                    System.out.println("Before encoderBox.active(): " + (System.currentTimeMillis() - debugTime));
                     if (encoderBox.active()) {
+
+                        System.out.println("After encoderBox.active(): " + (System.currentTimeMillis() - debugTime));
 
                         // Encoder one ande two from motor controller.
                         int enc1, enc2;
 
                         // Fetch encoder data
 
+                        System.out.println();
+                        System.out.println("Before encoderBox.getValue(): " + (System.currentTimeMillis() - debugTime));
+
                         // String array that holds encoder values.
                         String[] strings = encoderBox.getValue();
+
+                        System.out.println("After encoderBox.getValue(): " + (System.currentTimeMillis() - debugTime));
 
                         // If strings do not contain "no response" we know strings contain
                         // proper encoder values. Hence, we assign them to PoseChange-object.
@@ -167,18 +178,12 @@ public class Slam extends Thread {
                             if (poseChange.getDtSeconds() > 2.0) {
                                 System.out.println(poseChange.getDtSeconds());
                             }
-                            System.out.println("PoseChange updated!");
-                            System.out.println();
                         }
                     }
                     // For each scan
                     for (int x = 0; x < ns; x++) {
 
-                        System.out.println("Before scans.elementAt(x)");
-                        System.out.println();
                         int[] scan = scans.elementAt(x);
-                        System.out.println("After scans.elementAt(x)");
-                        System.out.println();
 
                         System.out.println("Slam updated!");
                         System.out.println();

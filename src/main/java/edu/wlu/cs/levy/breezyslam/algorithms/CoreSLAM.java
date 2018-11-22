@@ -53,7 +53,7 @@ public abstract class CoreSLAM {
     /**
     * The quality of the map (0 through 255)
     */
-    public int map_quality = 50; 
+    public int map_quality = 100;
 
     /**
     * The width in millimeters of each "hole" in the map (essentially, wall width)
