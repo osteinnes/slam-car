@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * LidarScan handles the scanning by the lidar in a seperate
+ * LidarThread handles the scanning by the lidar in a seperate
  * thread than the rest of the program. Since the LiDAR and SLAM
  * is not compatible we need to enter each sample of the LiDAR scan.
  * This results in us entering each of the 1000 samples in one revolution,
@@ -18,7 +18,7 @@ import java.util.Vector;
  *
  * @author Ole-martin Steinnes
  */
-public class LidarScan extends Thread {
+public class LidarThread extends Thread {
 
     // Lidar instance
     private SweepDevice sweepDevice;
@@ -33,14 +33,14 @@ public class LidarScan extends Thread {
     private int ns;
 
     /**
-     * Constructor of the LidarScan-class. Creates accepts instances
+     * Constructor of the LidarThread-class. Creates accepts instances
      * of SweepDevice, LidarBox and the samplelimit for one revolution.
      *
      * @param sweepDevice   LiDAR-instance
      * @param lidarBox      StorageBox-instance
      * @param sampleLimit   Limit of samples per revolution
      */
-    public LidarScan(SweepDevice sweepDevice, LidarBox lidarBox, int sampleLimit) {
+    public LidarThread(SweepDevice sweepDevice, LidarBox lidarBox, int sampleLimit) {
         this.sweepDevice = sweepDevice;
         this.lidarBox = lidarBox;
         this.sampleLimit = sampleLimit;

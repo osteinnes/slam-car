@@ -3,7 +3,7 @@ package sdv.app;
 
 import sdv.algorithms.slam.Slam;
 import sdv.devices.camera.RunWebcamera;
-import sdv.devices.lidar.LidarScan;
+import sdv.devices.lidar.LidarThread;
 import sdv.devices.motor.MotorInterface;
 import sdv.devices.lidar.Lidar;
 import sdv.tools.boxes.EncoderBox;
@@ -45,7 +45,7 @@ public class AppManager {
     // For motor controls and encoder data.
     private MotorInterface motorInterface;
 
-    private LidarScan lidarScan;
+    private LidarThread lidarThread;
 
     // Represenation of Storage Box
     private EncoderBox encoderBox;
@@ -228,7 +228,7 @@ public class AppManager {
             this.lidar.setLidarValues(1, 1000);
             this.lidar.startLidarScan();
 
-            this.lidarScan = new LidarScan(lidar.getLidarDevice(), lidarBox, 1060);
+            this.lidarThread = new LidarThread(lidar.getLidarDevice(), lidarBox, 1060);
 
             this.slam.initSlam(1, encoderBox, lidarBox);
 
@@ -236,7 +236,7 @@ public class AppManager {
                 slam.doAddMotorInterface(this.motorInterface);
             }*/
 
-            lidarScan.start();
+            lidarThread.start();
 
             slam.start();
 
@@ -276,8 +276,8 @@ public class AppManager {
         slam.shutDown();
         slam.close();
         slam.interrupt();
-        lidarScan.stopLidar();
-        lidarScan.interrupt();
+        lidarThread.stopLidar();
+        lidarThread.interrupt();
         lidar.close();
         this.slamRunning = false;
     }

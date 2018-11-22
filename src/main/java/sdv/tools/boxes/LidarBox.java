@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 /**
  * LidarBox represents a StorageBox which is used
- * between LidarScan- and Slam-threads. By use of AtomicRef
+ * between LidarThread- and Slam-threads. By use of AtomicRef
  * it will make sure that the communication between threads
  * is thread-safe. However, it is not necessary when only
  * one thread modifies the field. Though this implementation is made
