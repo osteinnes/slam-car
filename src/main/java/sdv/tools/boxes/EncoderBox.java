@@ -1,4 +1,4 @@
-package sdv.tools.threading.boxes;
+package sdv.tools.boxes;
 
 public class EncoderBox {
     private volatile String[] str;

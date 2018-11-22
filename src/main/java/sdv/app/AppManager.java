@@ -5,7 +5,7 @@ import sdv.algorithms.slam.Slam;
 import sdv.devices.camera.RunWebcamera;
 import sdv.devices.motor.MotorInterface;
 import sdv.devices.lidar.Lidar;
-import sdv.tools.threading.boxes.EncoderBox;
+import sdv.tools.boxes.EncoderBox;
 
 /**
  * This application was designed as a project in Real-time programming at NTNU Ålesund.

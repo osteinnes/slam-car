@@ -5,7 +5,7 @@ import edu.wlu.cs.levy.breezyslam.components.*;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
 import sdv.networking.slam.SlamMapStream;
-import sdv.tools.threading.boxes.EncoderBox;
+import sdv.tools.boxes.EncoderBox;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

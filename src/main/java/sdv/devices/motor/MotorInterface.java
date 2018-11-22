@@ -1,6 +1,6 @@
 package sdv.devices.motor;
 
-import sdv.tools.threading.boxes.EncoderBox;
+import sdv.tools.boxes.EncoderBox;
 import sdv.networking.gui.GuiServer;
 import sdv.networking.motor.MotorClient;
 

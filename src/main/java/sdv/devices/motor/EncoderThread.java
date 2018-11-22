@@ -1,6 +1,6 @@
 package sdv.devices.motor;
 
-import sdv.tools.threading.boxes.EncoderBox;
+import sdv.tools.boxes.EncoderBox;
 import sdv.networking.motor.MotorClient;
 
 import static java.lang.Thread.sleep;
