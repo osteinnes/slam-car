@@ -1,20 +1,20 @@
 package sdv.devices.motor;
 
-import sdv.networking.GuiServer;
-import sdv.networking.TcpClient;
+import sdv.networking.gui.GuiServer;
+import sdv.networking.motor.MotorClient;
 
 class ControlThread implements Runnable {
 
     private MotorCommands motorCommands = null;
     private GuiServer guiServer = null;
-    private TcpClient pythonClient = null;
+    private MotorClient pythonClient = null;
 
     // Keywords from guiClient.
     private String guiKeyword1;
     private String guiKeyword2;
     private boolean run = true;
 
-    public ControlThread(TcpClient client, MotorCommands motorCommands, GuiServer guiServer) {
+    public ControlThread(MotorClient client, MotorCommands motorCommands, GuiServer guiServer) {
         this.motorCommands = motorCommands;
         this.guiServer = guiServer;
         this.pythonClient = client;

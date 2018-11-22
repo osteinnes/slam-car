@@ -7,7 +7,7 @@ import io.scanse.sweep.SweepSample;
 import sdv.algorithms.slam.Robot;
 import sdv.devices.camera.RunWebcamera;
 import sdv.devices.motor.MotorInterface;
-import sdv.networking.SlamServer;
+import sdv.networking.slam.SlamServer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

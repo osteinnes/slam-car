@@ -1,4 +1,6 @@
-package sdv.networking;
+package sdv.networking.gui;
+
+import sdv.networking.TcpServer;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -32,7 +34,7 @@ public class GuiServer extends TcpServer {
     }
 
     @Override
-    void sendToClient(byte[] byteArray) {
+    public void sendToClient(byte[] byteArray) {
 
     }
 }

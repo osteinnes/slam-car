@@ -67,12 +67,12 @@ public abstract class TcpServer {
     /**
      * Recieves messages from client.
      */
-    abstract void messageFromClient();
+    protected abstract void messageFromClient();
 
     /**
      * Sends messages to client.
      */
-    abstract void sendToClient(byte[] byteArray);
+    protected abstract void sendToClient(byte[] byteArray);
 
     public String getClientString() {
         return clientString;

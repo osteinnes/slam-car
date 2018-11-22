@@ -1,4 +1,6 @@
-package sdv.networking;
+package sdv.networking.slam;
+
+import sdv.networking.TcpServer;
 
 import java.io.IOException;
 
@@ -7,14 +9,14 @@ import java.io.IOException;
  *
  * @author Ole-martin Steinnes
  */
-public class SlamServer extends TcpServer{
+public class SlamServer extends TcpServer {
 
     public SlamServer() {
         super();
     }
 
     @Override
-    void messageFromClient() {
+    public void messageFromClient() {
 
     }
 

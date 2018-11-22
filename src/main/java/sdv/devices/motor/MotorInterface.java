@@ -1,12 +1,12 @@
 package sdv.devices.motor;
 
 import sdv.tools.threading.boxes.EncoderBox;
-import sdv.networking.GuiServer;
-import sdv.networking.TcpClient;
+import sdv.networking.gui.GuiServer;
+import sdv.networking.motor.MotorClient;
 
 public class MotorInterface extends Thread {
     // Object containing the pythonClient
-    private TcpClient pythonClient;
+    private MotorClient pythonClient;
 
     // Object containing the motor motorCommands protocol
     private MotorCommands motorCommands;
@@ -46,7 +46,7 @@ public class MotorInterface extends Thread {
      */
 
     private void setUpFields() {
-        this.pythonClient = new TcpClient();
+        this.pythonClient = new MotorClient();
         this.motorCommands = new MotorCommands(pythonClient);
         this.guiServer = new GuiServer();
     }

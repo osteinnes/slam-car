@@ -1,7 +1,5 @@
 package sdv.networking.slam;
 
-import sdv.networking.SlamServer;
-
 /**
  * SlamMapStream contains a TCP-server that accepts connections
  * on socket from GUI. Extends thread and

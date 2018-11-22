@@ -1,6 +1,6 @@
 package sdv.devices.motor;
 
-import sdv.networking.TcpClient;
+import sdv.networking.motor.MotorClient;
 
 /**
  * MotorCommand class. Generalizes commands for motor controll
@@ -10,7 +10,7 @@ import sdv.networking.TcpClient;
 public class MotorCommands {
 
     // pythonClient to the Python MotorControl server.
-    private TcpClient pythonClient;
+    private MotorClient pythonClient;
     // Desired motorSpeed of motors.
     private int motorSpeed;
 
@@ -18,7 +18,7 @@ public class MotorCommands {
      * Constructor of the MotorCommands class. Sets motorSpeed to 0 (until user input) and sets client.
      * @param client Tcp-client of the Python server.
      */
-    public MotorCommands(TcpClient client){
+    public MotorCommands(MotorClient client){
         motorSpeed = 32;
         this.pythonClient = client;
     }

@@ -1,13 +1,13 @@
-package sdv.networking;
+package sdv.networking.motor;
 
 import java.io.*;
 import java.net.Socket;
 
 /**
- * TcpClient-class that connects to a Python-server that
+ * MotorClient-class that connects to a Python-server that
  * directly communicates with the Motor controller over USB.
  */
-public class TcpClient {
+public class MotorClient {
 
     // Response from server
     private String serverResponse;
@@ -22,9 +22,9 @@ public class TcpClient {
     private Socket clientSocket;
 
     /**
-     * Constructor of the TcpClient-class. Sets connected false initially.
+     * Constructor of the MotorClient-class. Sets connected false initially.
      */
-    public TcpClient() {
+    public MotorClient() {
         connected = false;
     }
 
