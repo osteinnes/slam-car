@@ -17,33 +17,34 @@ import java.io.IOException;
  */
 public class Slam extends Thread {
 
+    // Objects used for SLAM-algorithm
     private Laser myLidar;
     private RMHCSLAM slam;
     private PoseChange poseChange;
-
     private Robot robot;
+
+    // Stream-thread that uploads SLAM-map to GUI.
     private SlamMapStream slamMapStream;
 
+    // StorageBox objects
     private EncoderBox encoderBox;
-
-    private int lidarSpeed;
-    private int sampleLimit;
-
-    private byte[] mapbytes;
-
-    private final int HOLE_WIDTH_MM = 200;
-
-    private int ns = 0;
-    private long time = System.currentTimeMillis();
-
-    private static int MAP_SIZE_PIXELS = 820;
     private LidarBox lidarBox;
 
+    // Maximum amount of samples for one scan revolution
+    private int sampleLimit;
+
+    // Byte-array that stores last SLAM-generated map.
+    private byte[] mapbytes;
+
+    // Map size in pixels.
+    private static int MAP_SIZE_PIXELS = 820;
+
+    // Converts SLAM-coordinates to index in the map.
     static int coords2index(double x, double y) {
         return (int) (y * MAP_SIZE_PIXELS + x);
     }
 
-    private boolean motorActive;
+    // Bool-flag that determines if the SLAM should be running or not.
     private boolean slamActive;
 
     /**
@@ -51,7 +52,6 @@ public class Slam extends Thread {
      */
     public Slam() {
         setUpFields();
-
     }
 
     /**
@@ -67,37 +67,27 @@ public class Slam extends Thread {
      *
      * @param lidarBox      StorageBox for lidar values
      * @param encoderBox    StorageBox for encoder values
-     * @param lidarSpeed     Motor speed of LiDAR
      */
-    public void initSlam(int lidarSpeed, EncoderBox encoderBox, LidarBox lidarBox) {
+    public void initSlam(EncoderBox encoderBox, LidarBox lidarBox) {
 
+        // Set fields
         this.slamActive = true;
-        this.lidarSpeed = lidarSpeed;
+        this.sampleLimit = 1060;
+
+        // Created StorageBox-instances.
         this.encoderBox = encoderBox;
         this.lidarBox = lidarBox;
+
+        // Start Map-stream thread.
         this.slamMapStream = new SlamMapStream(8002, MAP_SIZE_PIXELS);
         this.slamMapStream.start();
 
-        if (this.lidarSpeed == 1) {
-            this.sampleLimit = 1060;
-        } else if (this.lidarSpeed == 2) {
-            this.sampleLimit = 530;
-        } else {
-            this.sampleLimit = 1060;
-        }
-
-
-        // new position change object.
+        // New objects for running SLAM.
         poseChange = new PoseChange();
-
-        // new LiDAR object.
         myLidar = new Laser(this.sampleLimit, 1000,
                 360, 10000,
                 1, 0.1);
-
-        // new SLAM library
         slam = new RMHCSLAM(myLidar, 820, 30, 1337);
-
         robot = new Robot(30, 110);
     }
 
@@ -107,31 +97,22 @@ public class Slam extends Thread {
      */
     public void run() {
 
-        do {
+        System.out.println("SLAM activated!");
 
+        do {
             if (lidarBox.isReady()) {
 
+                // Get last lidar-scan (one revolution)
                 int[] scan = lidarBox.getValue();
 
-                long debugTime = System.currentTimeMillis();
-                System.out.println();
-                System.out.println("Before encoderBox.active(): " + (System.currentTimeMillis() - debugTime));
+
                 if (encoderBox.active()) {
 
-                    System.out.println("After encoderBox.active(): " + (System.currentTimeMillis() - debugTime));
-
-                    // Encoder one ande two from motor controller.
+                    // Encoder one and two from motor controller.
                     int enc1, enc2;
-
-                    // Fetch encoder data
-
-                    System.out.println();
-                    System.out.println("Before encoderBox.getValue(): " + (System.currentTimeMillis() - debugTime));
 
                     // String array that holds encoder values.
                     String[] strings = encoderBox.getValue();
-
-                    System.out.println("After encoderBox.getValue(): " + (System.currentTimeMillis() - debugTime));
 
                     // If strings do not contain "no response" we know strings contain
                     // proper encoder values. Hence, we assign them to PoseChange-object.
@@ -145,30 +126,15 @@ public class Slam extends Thread {
                         enc1 = Integer.parseInt(encoder1);
                         enc2 = Integer.parseInt(encoder2);
 
-                        System.out.println("Enc1: " + enc1 + " Enc2: " + enc2);
-                        System.out.println();
-
                         // Computing PoseChange through abstract Robot-class.
                         poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);
-                        if (poseChange.getDtSeconds() > 2.0) {
-                            System.out.println(poseChange.getDtSeconds());
-                        }
                     }
                 }
-
-
-                System.out.println("Slam updated!");
-                System.out.println();
-
                 // Update slam with new scan and position change
                 slam.update(scan, poseChange);
                 slam.getmap(mapbytes);
                 slamMapStream.setByteMap(mapbytes);
-
             }
-
-
-
         } while (slamActive);
     }
 
@@ -179,12 +145,14 @@ public class Slam extends Thread {
         // Byte-array we store map in.
         byte[] mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
 
+        // Gets map from SLAM-algorithm
         slam.getmap(mapbytes);
 
-
-        String filename = "SLAM-with-position-test.pgm";
+        // Filename of the final map.
+        String filename = "SLAM-map.pgm";
 
         System.out.println("\nSaving map to file " + filename);
+
 
         BufferedWriter output = null;
 
@@ -205,22 +173,6 @@ public class Slam extends Thread {
         }
     }
 
-
-
-    /**
-     * Shuts down the MotorInterface-instance currently used when shutting down.
-     */
-    public void shutDown() {
-        motorActive = false;
-    }
-
-    /**
-     * Returns the motor controller status of the app. Whether it is active or not.
-     * @return the motor controller status of the app. Whether it is active or not.
-     */
-    public boolean getMotorActive() {
-        return motorActive;
-    }
 
     /**
      * Sets SLAM inactive, writes SLAM-map, and stops LiDAR-scan.
