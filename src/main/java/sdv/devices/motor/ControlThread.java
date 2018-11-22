@@ -3,6 +3,12 @@ package sdv.devices.motor;
 import sdv.networking.gui.GuiServer;
 import sdv.networking.motor.MotorClient;
 
+/**
+ * Runnable Control Thread which parses input
+ * from the GUI and translates them to motor commands
+ * which in turns get sent to the python server which
+ * controls the motors directly.
+ */
 class ControlThread implements Runnable {
 
     private MotorCommands motorCommands = null;
@@ -14,6 +20,12 @@ class ControlThread implements Runnable {
     private String guiKeyword2;
     private boolean run = true;
 
+    /**
+     * Constructor
+     * @param client object containing tcp connection to python server
+     * @param motorCommands contains a set  of predefined functions for sending request to python server
+     * @param guiServer contains a TCP client which connects to the GUI server
+     */
     public ControlThread(MotorClient client, MotorCommands motorCommands, GuiServer guiServer) {
         this.motorCommands = motorCommands;
         this.guiServer = guiServer;
@@ -22,13 +34,17 @@ class ControlThread implements Runnable {
         this.guiKeyword2 = "";
     }
 
+    /**
+     * Parses input from the gui server in strings.
+     * Checks input and runs functions accordingly.
+     * Runs until keyword "exit" is recieved.
+     */
+
     public void run() {
         boolean ready = true;
         while (run) {
-            //System.out.println("Entering while");
             guiServer.messageFromClient();
             String text = guiServer.getClientString();
-            // String text = keyboard.nextLine();
             String[] guiClientInput = inputParser(text);
 
             if (guiClientInput.length == 2) {
@@ -78,6 +94,12 @@ class ControlThread implements Runnable {
             }
         }
     }
+
+    /**
+     * Splits strings separated by a semicolon (':') into a string array
+     * @param keyword
+     * @return String array
+     */
     private String[] inputParser (String keyword){
         return keyword.split(":");
     }
