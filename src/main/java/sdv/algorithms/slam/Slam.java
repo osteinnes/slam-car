@@ -137,21 +137,15 @@ public class Slam extends Thread {
                     // Add distance to scan vector
                     scans.addElement(distanceA);
                     ns = scans.size();
-                    if (motorActive) {
+                    if (encoderBox.active()) {
 
                         // Encoder one ande two from motor controller.
                         int enc1, enc2;
-
-                        System.out.println("About to fetch encoderdata");
-                        System.out.println();
 
                         // Fetch encoder data
 
                         // String array that holds encoder values.
                         String[] strings = encoderBox.getValue();
-
-                        System.out.println("Fetched encoderdata");
-                        System.out.println();
 
                         // If strings do not contain "no response" we know strings contain
                         // proper encoder values. Hence, we assign them to PoseChange-object.

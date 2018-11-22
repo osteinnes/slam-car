@@ -5,7 +5,7 @@ public class EncoderBox {
     private boolean run;
 
     public EncoderBox() {
-        str = new String[4];
+        str = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
     }
 
 
@@ -15,6 +15,18 @@ public class EncoderBox {
 
     public String[] getValue() {
         return str;
+    }
+
+    public void start() {
+        run = true;
+    }
+
+    public void stop() {
+        run = false;
+    }
+
+    public boolean active() {
+        return run;
     }
 }
 

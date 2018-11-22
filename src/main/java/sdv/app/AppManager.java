@@ -196,14 +196,19 @@ public class AppManager {
      * Starts the motor controller.
      */
     private void doStartMotorController() {
+
+
         this.motorInterface = new MotorInterface(encoderBox);
         this.motorInterface.start();
+
 
        /* if (slamRunning && !slam.getMotorActive()) {
             slam.doAddMotorInterface(this.motorInterface);
         }*/
 
+
         this.appRunning = true;
+
     }
 
     /**
@@ -243,6 +248,8 @@ public class AppManager {
      * Stops the motor controller
      */
     private void doStopMotorController() {
+
+        this.encoderBox.stop();
         motorInterface.doStop();
         motorInterface.interrupt();
 

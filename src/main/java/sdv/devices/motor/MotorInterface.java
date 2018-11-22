@@ -25,10 +25,10 @@ public class MotorInterface extends Thread {
     private EncoderBox box;
 
     public MotorInterface(EncoderBox box) {
+        this.box = box;
         setUpFields();
         setUpConnection();
         setUpThreads();
-        this.box = box;
     }
 
     public void run() {

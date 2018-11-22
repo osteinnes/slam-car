@@ -20,10 +20,13 @@ public class EncoderThread implements Runnable {
 
     @Override
     public void run() {
+        box.start();
         while (true) {
-            box.setValue(getEncoder());
+                String[] s = getEncoder();
+                box.setValue(s);
+
             try {
-                sleep(300);
+                sleep(999);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -35,14 +38,15 @@ public class EncoderThread implements Runnable {
      **/
 
     public String[] getEncoder() {
-        String[] strings;
+        String[] strings, s;
         motorCommands.getEncoderData();
-        pythonClient.messageFromServer();
-        if (!pythonClient.response[1].contains("FAILED") && !pythonClient.response[3].contains("FAILED")) {
+        s = pythonClient.messageFromServer();
+        if (!s[1].contains("FAILED") && !s[3].contains("FAILED")) {
             //System.out.println("Encoder1: " + pythonClient2.response[1]);
             //System.out.println("Encoder2: " + pythonClient2.response[3]);
-            strings = pythonClient.response;
+            strings = s;
         } else {
+            System.out.println("getEncoder() FAILED");
             strings = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
         }
         return strings;

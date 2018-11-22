@@ -17,7 +17,8 @@ public class MotorClient {
     private BufferedReader in;
     // Output to server.
     private PrintWriter pw;
-    public String[] response;
+
+    private String[] response;
 
     private Socket clientSocket;
 
@@ -52,7 +53,7 @@ public class MotorClient {
     }
 
 
-    public void messageFromServer() {
+    public String[] messageFromServer() {
         try {
             if (in.ready()) {
                 serverResponse = in.readLine();
@@ -66,7 +67,10 @@ public class MotorClient {
             }
         } catch (IOException ex) {
             System.out.println(ex.toString());
+            response = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
         }
+
+        return response;
     }
 
     /**
