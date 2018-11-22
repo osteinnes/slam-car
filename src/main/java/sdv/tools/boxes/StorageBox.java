@@ -8,8 +8,17 @@ public abstract class StorageBox {
 
     }
 
-    protected abstract void setValue();
 
-    protected abstract Object getValue();
+    public void start(){
+        run = true;
+    }
+
+    public void stop(){
+        run = false;
+    }
+
+    public boolean active(){
+        return run;
+    }
 
 }

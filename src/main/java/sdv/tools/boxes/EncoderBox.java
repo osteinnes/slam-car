@@ -2,24 +2,19 @@ package sdv.tools.boxes;
 
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-public class EncoderBox {
+public class EncoderBox extends StorageBox {
     private volatile String[] str;
-    private boolean run;
-
-    public EncoderBox() {
-        str = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
-    }
 
     private static final AtomicReferenceFieldUpdater<EncoderBox,String[]> updater =
             AtomicReferenceFieldUpdater.newUpdater(
                     EncoderBox.class, String[].class, "str");
 
 
-    /*public void setValue(String[] currentString) {
-        synchronized (this) {
-            this.str = currentString;
-        }
-    }*/
+    public EncoderBox() {
+        super();
+        str = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
+    }
+
 
     public void setValue(String[] currentString) {
         updater.compareAndSet(this, this.str, currentString);
@@ -29,17 +24,6 @@ public class EncoderBox {
             return str;
     }
 
-    public void start() {
-            run = true;
-    }
-
-    public void stop() {
-            run = false;
-    }
-
-    public boolean active() {
-            return run;
-    }
 }
 
 

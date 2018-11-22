@@ -3,9 +3,11 @@ package sdv.app;
 
 import sdv.algorithms.slam.Slam;
 import sdv.devices.camera.RunWebcamera;
+import sdv.devices.lidar.LidarScan;
 import sdv.devices.motor.MotorInterface;
 import sdv.devices.lidar.Lidar;
 import sdv.tools.boxes.EncoderBox;
+import sdv.tools.boxes.LidarBox;
 
 /**
  * This application was designed as a project in Real-time programming at NTNU Ålesund.
@@ -43,9 +45,11 @@ public class AppManager {
     // For motor controls and encoder data.
     private MotorInterface motorInterface;
 
+    private LidarScan lidarScan;
 
     // Represenation of Storage Box
     private EncoderBox encoderBox;
+    private LidarBox lidarBox;
 
     // Representation of a Scanse LiDAR
     private Lidar lidar;
@@ -89,6 +93,7 @@ public class AppManager {
     private void doSetUpApp() {
         this.appController = new AppController();
         this.encoderBox = new EncoderBox();
+        this.lidarBox = new LidarBox();
     }
 
     /**
@@ -223,11 +228,15 @@ public class AppManager {
             this.lidar.setLidarValues(1, 1000);
             this.lidar.startLidarScan();
 
-            this.slam.initSlam(lidar.getLidarDevice(), 1, encoderBox);
+            this.lidarScan = new LidarScan(lidar.getLidarDevice(), lidarBox, 1060);
+
+            this.slam.initSlam(1, encoderBox, lidarBox);
 
            /* if (appRunning && !slam.getMotorActive()) {
                 slam.doAddMotorInterface(this.motorInterface);
             }*/
+
+            lidarScan.start();
 
             slam.start();
 
@@ -267,6 +276,8 @@ public class AppManager {
         slam.shutDown();
         slam.close();
         slam.interrupt();
+        lidarScan.stopLidar();
+        lidarScan.interrupt();
         lidar.close();
         this.slamRunning = false;
     }

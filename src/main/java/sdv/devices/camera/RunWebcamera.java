@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public class RunWebcamera extends Thread {
 
-    private volatile boolean camRunning;
+    private boolean camRunning;
 
     @Override
     public void run() {

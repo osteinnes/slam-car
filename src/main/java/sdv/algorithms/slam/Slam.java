@@ -2,16 +2,13 @@ package sdv.algorithms.slam;
 
 import edu.wlu.cs.levy.breezyslam.algorithms.RMHCSLAM;
 import edu.wlu.cs.levy.breezyslam.components.*;
-import io.scanse.sweep.SweepDevice;
-import io.scanse.sweep.SweepSample;
 import sdv.networking.slam.SlamMapStream;
 import sdv.tools.boxes.EncoderBox;
+import sdv.tools.boxes.LidarBox;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Interface for our SLAM-algorithm
@@ -27,8 +24,6 @@ public class Slam extends Thread {
     private Robot robot;
     private SlamMapStream slamMapStream;
 
-    private SweepDevice sweepDevice;
-
     private EncoderBox encoderBox;
 
     private int lidarSpeed;
@@ -42,6 +37,7 @@ public class Slam extends Thread {
     private long time = System.currentTimeMillis();
 
     private static int MAP_SIZE_PIXELS = 820;
+    private LidarBox lidarBox;
 
     static int coords2index(double x, double y) {
         return (int) (y * MAP_SIZE_PIXELS + x);
@@ -69,14 +65,16 @@ public class Slam extends Thread {
     /**
      * Sets up objects used in our SLAM application
      *
-     * @param sweepDevice    Sweep LiDAR of the car
+     * @param lidarBox      StorageBox for lidar values
+     * @param encoderBox    StorageBox for encoder values
      * @param lidarSpeed     Motor speed of LiDAR
      */
-    public void initSlam(SweepDevice sweepDevice, int lidarSpeed, EncoderBox encoderBox) {
+    public void initSlam(int lidarSpeed, EncoderBox encoderBox, LidarBox lidarBox) {
 
         this.slamActive = true;
         this.lidarSpeed = lidarSpeed;
         this.encoderBox = encoderBox;
+        this.lidarBox = lidarBox;
         this.slamMapStream = new SlamMapStream(8002, MAP_SIZE_PIXELS);
         this.slamMapStream.start();
 
@@ -88,14 +86,13 @@ public class Slam extends Thread {
             this.sampleLimit = 1060;
         }
 
-        this.sweepDevice = sweepDevice;
 
         // new position change object.
         poseChange = new PoseChange();
 
         // new LiDAR object.
         myLidar = new Laser(this.sampleLimit, 1000,
-                360, 1,
+                360, 10000,
                 1, 0.1);
 
         // new SLAM library
@@ -111,92 +108,66 @@ public class Slam extends Thread {
     public void run() {
 
         do {
-            // Loops through samples of each scan
-            for (List<SweepSample> s : sweepDevice.scans()) {
 
-                // Int-array of distances in scan.
-                int[] distanceA = new int[this.sampleLimit];
+            if (lidarBox.isReady()) {
 
-                // Scan vector
-                Vector<int[]> scans = new Vector<int[]>();
+                int[] scan = lidarBox.getValue();
 
+                long debugTime = System.currentTimeMillis();
+                System.out.println();
+                System.out.println("Before encoderBox.active(): " + (System.currentTimeMillis() - debugTime));
+                if (encoderBox.active()) {
 
-                // Enter when there is mor than 1059 samples in the scan.
-                if (s.size() > (this.sampleLimit - 1)) {
+                    System.out.println("After encoderBox.active(): " + (System.currentTimeMillis() - debugTime));
 
-                    System.out.println("Enterd IF with " + s.size() + " samples");
+                    // Encoder one ande two from motor controller.
+                    int enc1, enc2;
 
-                    // For each sample, get distance.
-                    for (int i = 0; i <= (this.sampleLimit - 1); i++) {
-                        int dist = s.get(i).getDistance();
+                    // Fetch encoder data
 
-                        distanceA[i] = dist * 10;
-
-                    }
-
-                    // Add distance to scan vector
-                    scans.addElement(distanceA);
-                    ns = scans.size();
-
-                    long debugTime = System.currentTimeMillis();
                     System.out.println();
-                    System.out.println("Before encoderBox.active(): " + (System.currentTimeMillis() - debugTime));
-                    if (encoderBox.active()) {
+                    System.out.println("Before encoderBox.getValue(): " + (System.currentTimeMillis() - debugTime));
 
-                        System.out.println("After encoderBox.active(): " + (System.currentTimeMillis() - debugTime));
+                    // String array that holds encoder values.
+                    String[] strings = encoderBox.getValue();
 
-                        // Encoder one ande two from motor controller.
-                        int enc1, enc2;
+                    System.out.println("After encoderBox.getValue(): " + (System.currentTimeMillis() - debugTime));
 
-                        // Fetch encoder data
+                    // If strings do not contain "no response" we know strings contain
+                    // proper encoder values. Hence, we assign them to PoseChange-object.
+                    if (!strings[1].equalsIgnoreCase("no response")) {
 
+                        // encoder values
+                        String encoder1 = strings[1];
+                        String encoder2 = strings[3];
+
+                        // Parsing encoder values from String to int.
+                        enc1 = Integer.parseInt(encoder1);
+                        enc2 = Integer.parseInt(encoder2);
+
+                        System.out.println("Enc1: " + enc1 + " Enc2: " + enc2);
                         System.out.println();
-                        System.out.println("Before encoderBox.getValue(): " + (System.currentTimeMillis() - debugTime));
 
-                        // String array that holds encoder values.
-                        String[] strings = encoderBox.getValue();
-
-                        System.out.println("After encoderBox.getValue(): " + (System.currentTimeMillis() - debugTime));
-
-                        // If strings do not contain "no response" we know strings contain
-                        // proper encoder values. Hence, we assign them to PoseChange-object.
-                        if (!strings[1].equalsIgnoreCase("no response")) {
-
-                            // encoder values
-                            String encoder1 = strings[1];
-                            String encoder2 = strings[3];
-
-                            // Parsing encoder values from String to int.
-                            enc1 = Integer.parseInt(encoder1);
-                            enc2 = Integer.parseInt(encoder2);
-
-                            System.out.println("Enc1: " + enc1 + " Enc2: " + enc2);
-                            System.out.println();
-
-                            // Computing PoseChange through abstract Robot-class.
-                            poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);
-                            if (poseChange.getDtSeconds() > 2.0) {
-                                System.out.println(poseChange.getDtSeconds());
-                            }
+                        // Computing PoseChange through abstract Robot-class.
+                        poseChange = robot.computePoseChange(((System.currentTimeMillis())) / 1000.0, enc1, enc2);
+                        if (poseChange.getDtSeconds() > 2.0) {
+                            System.out.println(poseChange.getDtSeconds());
                         }
                     }
-                    // For each scan
-                    for (int x = 0; x < ns; x++) {
-
-                        int[] scan = scans.elementAt(x);
-
-                        System.out.println("Slam updated!");
-                        System.out.println();
-
-                        // Update slam with new scan and position change
-                        slam.update(scan, poseChange);
-                        slam.getmap(mapbytes);
-                        slamMapStream.setByteMap(mapbytes);
-                    }
                 }
+
+
+                System.out.println("Slam updated!");
+                System.out.println();
+
+                // Update slam with new scan and position change
+                slam.update(scan, poseChange);
+                slam.getmap(mapbytes);
+                slamMapStream.setByteMap(mapbytes);
+
             }
 
-            System.out.println("slamActive: " + slamActive);
+
 
         } while (slamActive);
     }
@@ -259,7 +230,5 @@ public class Slam extends Thread {
         slamMapStream.stopMapStream();
         slamMapStream.interrupt();
         writeMap();
-        sweepDevice.stopScanning();
-        sweepDevice.setMotorSpeed(0);
     }
 }
