@@ -11,7 +11,6 @@ public class EncoderBox extends StorageBox {
 
 
     public EncoderBox() {
-        super();
         str = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
     }
 
