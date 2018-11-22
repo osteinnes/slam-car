@@ -34,14 +34,13 @@ public class SlamMapStream extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            if (newMap) {
-                slamServer.sendToClient(mapbytes);
-                System.out.println("Uploading new map!");
-                System.out.println();
-                newMap = false;
-            }
-        }
+
+        slamServer.sendToClient(mapbytes);
+        System.out.println("Uploading new map!");
+        System.out.println();
+        newMap = false;
+
+
     }
 
     /**
