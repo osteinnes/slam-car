@@ -1,6 +1,3 @@
-import sdv.algorithms.slam.Slam;
-import sdv.sensors.lidar.Lidar;
-
 /**
  * Test class for the position change input of SLAM-library
  *

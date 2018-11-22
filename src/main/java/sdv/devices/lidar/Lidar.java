@@ -1,4 +1,4 @@
-package sdv.sensors.lidar;
+package sdv.devices.lidar;
 
 import io.scanse.sweep.SweepDevice;
 

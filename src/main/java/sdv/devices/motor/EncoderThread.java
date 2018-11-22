@@ -1,6 +1,6 @@
 package sdv.devices.motor;
 
-import sdv.tools.StorageBox;
+import sdv.tools.threading.boxes.StorageBox;
 import sdv.networking.TcpClient;
 
 import static java.lang.Thread.sleep;

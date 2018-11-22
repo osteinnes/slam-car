@@ -1,4 +1,4 @@
-package sdv.tools;
+package sdv.tools.threading.boxes;
 
 public class StorageBox {
     private volatile String[] str;

@@ -4,9 +4,8 @@ import edu.wlu.cs.levy.breezyslam.algorithms.RMHCSLAM;
 import edu.wlu.cs.levy.breezyslam.components.*;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
-import sdv.devices.motor.MotorInterface;
 import sdv.networking.slam.SlamMapStream;
-import sdv.tools.StorageBox;
+import sdv.tools.threading.boxes.StorageBox;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
