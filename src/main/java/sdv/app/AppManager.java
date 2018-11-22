@@ -230,7 +230,7 @@ public class AppManager {
 
             this.lidarThread = new LidarThread(lidar.getLidarDevice(), lidarBox, 1060);
 
-            this.slam.initSlam(1, encoderBox, lidarBox);
+            this.slam.initSlam(encoderBox, lidarBox);
 
            /* if (appRunning && !slam.getMotorActive()) {
                 slam.doAddMotorInterface(this.motorInterface);
@@ -262,9 +262,6 @@ public class AppManager {
         motorInterface.doStop();
         motorInterface.interrupt();
 
-        if (slamRunning) {
-            slam.shutDown();
-        }
 
         this.appRunning = false;
     }
@@ -273,7 +270,6 @@ public class AppManager {
      * Stops the SLAM-algorithm
      */
     private void doStopSlam() {
-        slam.shutDown();
         slam.close();
         slam.interrupt();
         lidarThread.stopLidar();
