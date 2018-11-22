@@ -3,29 +3,39 @@ package sdv.devices.motor;
 import sdv.tools.boxes.EncoderBox;
 import sdv.networking.motor.MotorClient;
 
+/**
+ * Runnable thread that sends encoder requests
+ * to the python server and stores the values
+ * in a shared storage box.
+ */
 
 public class EncoderThread implements Runnable {
+
     private MotorClient pythonClient;
     private MotorCommands motorCommands;
     private EncoderBox box;
 
-
+    /**
+     * Constructor
+     * @param motorClient Inherits an motorClient object which contains a tcp connection.
+     * @param motorCommands Set of predefined functions used to send encoder request.
+     * @param box Storage box for storing encoder values
+     */
     public EncoderThread(MotorClient motorClient, MotorCommands motorCommands, EncoderBox box) {
         this.pythonClient = motorClient;
         this.motorCommands = motorCommands;
         this.box = box;
     }
 
-    @Override
     public void run() {
         box.start();
         while (true) {
-
+            //Fetches encoder data with 1 second interval
             long time = System.currentTimeMillis();
             String[] s = getEncoder();
             box.setValue(s);
+            //Prints delta time between fetching and setting values in storagebox
             System.out.println("Time since getEncoder(): " + (System.currentTimeMillis() - time));
-
             try {
                 Thread.sleep(999);
             } catch (InterruptedException e) {
@@ -36,8 +46,11 @@ public class EncoderThread implements Runnable {
         }
     }
 
-    /**
-     * @return
+    /**Uses the getEncoderData function found in motor commands
+     * to send an request to the python server for encoder data.
+     * Returns previous values for encoder if reading failed.
+     * Returns no response if the server is unresponsive
+     * @return Encoder values in a string array.
      **/
 
     public String[] getEncoder() {

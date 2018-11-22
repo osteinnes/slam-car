@@ -4,6 +4,11 @@ import sdv.tools.boxes.EncoderBox;
 import sdv.networking.gui.GuiServer;
 import sdv.networking.motor.MotorClient;
 
+/**
+ * A collection of threads and functions relating to motor control.
+ * Initializes and starts both encoder thread and motor control thread.
+ * Connects to the gui server.
+ */
 public class MotorInterface extends Thread {
     // Object containing the pythonClient
     private MotorClient pythonClient;
@@ -24,6 +29,11 @@ public class MotorInterface extends Thread {
     //Storage box
     private EncoderBox box;
 
+    /**
+     * Constructor
+     * @param box StorageBox to store Encoder Values
+     */
+
     public MotorInterface(EncoderBox box) {
         this.box = box;
         setUpFields();
@@ -31,6 +41,9 @@ public class MotorInterface extends Thread {
         setUpThreads();
     }
 
+    /**
+     * Starts encoder thread and control thread.
+     */
     public void run() {
         try {
             eThread.start();
@@ -51,6 +64,10 @@ public class MotorInterface extends Thread {
         this.guiServer = new GuiServer();
     }
 
+    /**
+     * Sets up connection the python client
+     * and the GUI server
+     */
     private void setUpConnection() {
         if (!pythonClient.connected) {
             pythonClient.connect();
@@ -62,6 +79,9 @@ public class MotorInterface extends Thread {
         }
     }
 
+    /**
+     * Sets up threads.
+     */
     private void setUpThreads() {
         controlThread = new ControlThread(pythonClient, motorCommands, guiServer);
         cThread = new Thread(controlThread);
@@ -74,10 +94,9 @@ public class MotorInterface extends Thread {
 
     }
 
-    public String[] fetchEncoderData(){
-        return this.encoderThread.getEncoder();
-    }
-
+    /**
+     * Stops everything.
+     */
     public void doStop(){
         motorCommands.stop();
         guiServer.closeSocket();
