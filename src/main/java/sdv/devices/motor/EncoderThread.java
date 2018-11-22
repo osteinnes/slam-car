@@ -1,6 +1,6 @@
 package sdv.devices.motor;
 
-import sdv.tools.threading.boxes.StorageBox;
+import sdv.tools.threading.boxes.EncoderBox;
 import sdv.networking.TcpClient;
 
 import static java.lang.Thread.sleep;
@@ -9,10 +9,10 @@ import static java.lang.Thread.sleep;
 public class EncoderThread implements Runnable {
     private TcpClient pythonClient;
     private MotorCommands motorCommands;
-    private StorageBox box;
+    private EncoderBox box;
 
 
-    public EncoderThread(TcpClient tcpClient, MotorCommands motorCommands, StorageBox box) {
+    public EncoderThread(TcpClient tcpClient, MotorCommands motorCommands, EncoderBox box) {
         this.pythonClient = tcpClient;
         this.motorCommands = motorCommands;
         this.box = box;

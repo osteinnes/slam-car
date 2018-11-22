@@ -1,10 +1,10 @@
 package sdv.tools.threading.boxes;
 
-public class StorageBox {
+public class EncoderBox {
     private volatile String[] str;
     private boolean run;
 
-    public StorageBox() {
+    public EncoderBox() {
         str = new String[4];
     }
 

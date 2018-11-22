@@ -5,7 +5,7 @@ import edu.wlu.cs.levy.breezyslam.components.*;
 import io.scanse.sweep.SweepDevice;
 import io.scanse.sweep.SweepSample;
 import sdv.networking.slam.SlamMapStream;
-import sdv.tools.threading.boxes.StorageBox;
+import sdv.tools.threading.boxes.EncoderBox;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -29,7 +29,7 @@ public class Slam extends Thread {
 
     private SweepDevice sweepDevice;
 
-    private StorageBox storageBox;
+    private EncoderBox encoderBox;
 
     private int lidarSpeed;
     private int sampleLimit;
@@ -72,11 +72,11 @@ public class Slam extends Thread {
      * @param sweepDevice    Sweep LiDAR of the car
      * @param lidarSpeed     Motor speed of LiDAR
      */
-    public void initSlam(SweepDevice sweepDevice, int lidarSpeed, StorageBox storageBox) {
+    public void initSlam(SweepDevice sweepDevice, int lidarSpeed, EncoderBox encoderBox) {
 
         this.slamActive = true;
         this.lidarSpeed = lidarSpeed;
-        this.storageBox = storageBox;
+        this.encoderBox = encoderBox;
         this.slamMapStream = new SlamMapStream(8002, MAP_SIZE_PIXELS);
         this.slamMapStream.start();
 
@@ -148,7 +148,7 @@ public class Slam extends Thread {
                         // Fetch encoder data
 
                         // String array that holds encoder values.
-                        String[] strings = storageBox.getValue();
+                        String[] strings = encoderBox.getValue();
 
                         System.out.println("Fetched encoderdata");
                         System.out.println();

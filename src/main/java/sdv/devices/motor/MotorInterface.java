@@ -1,6 +1,6 @@
 package sdv.devices.motor;
 
-import sdv.tools.threading.boxes.StorageBox;
+import sdv.tools.threading.boxes.EncoderBox;
 import sdv.networking.GuiServer;
 import sdv.networking.TcpClient;
 
@@ -22,9 +22,9 @@ public class MotorInterface extends Thread {
     private Thread eThread;
 
     //Storage box
-    private StorageBox box;
+    private EncoderBox box;
 
-    public MotorInterface(StorageBox box) {
+    public MotorInterface(EncoderBox box) {
         setUpFields();
         setUpConnection();
         setUpThreads();
