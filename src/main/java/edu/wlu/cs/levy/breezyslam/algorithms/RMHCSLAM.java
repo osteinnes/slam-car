@@ -28,7 +28,7 @@ import edu.wlu.cs.levy.breezyslam.components.Scan;
 public class RMHCSLAM extends SinglePositionSLAM
 {
     private static final double DEFAULT_SIGMA_XY_MM         = 500;
-    private static final double DEFAULT_SIGMA_THETA_DEGREES = 10;
+    private static final double DEFAULT_SIGMA_THETA_DEGREES = 20;
     private static final int    DEFAULT_MAX_SEARCH_ITER     = 5000;
 
 	static 
