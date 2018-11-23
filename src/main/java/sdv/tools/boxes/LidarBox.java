@@ -38,8 +38,7 @@ public class LidarBox extends StorageBox{
      * @param currentScan current scan values by lidar (last whole revolution)
      */
     public void setValue(int[] currentScan) {
-        updater.compareAndSet(this, this.scans, currentScan);
-        this.isReady = true;
+        isReady = updater.compareAndSet(this, this.scans, currentScan);
     }
 
     /**
