@@ -5,7 +5,6 @@ import edu.wlu.cs.levy.breezyslam.components.*;
 import sdv.networking.slam.SlamMapStream;
 import sdv.tools.boxes.EncoderBox;
 import sdv.tools.boxes.LidarBox;
-import sun.nio.ch.ThreadPool;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -56,8 +55,9 @@ public class Slam extends Thread {
     /**
      * Constructor of the Slam-class.
      */
-    public Slam() {
+    public Slam(EncoderBox encoderBox, LidarBox lidarBox) {
         setUpFields();
+        initSlam(encoderBox, lidarBox);
     }
 
     /**
@@ -66,8 +66,6 @@ public class Slam extends Thread {
     private void setUpFields() {
         // Byte-array we store map in.
         mapbytes = new byte[MAP_SIZE_PIXELS * MAP_SIZE_PIXELS];
-
-        executorService = Executors.newFixedThreadPool(1);
     }
 
     /**
@@ -77,6 +75,8 @@ public class Slam extends Thread {
      * @param encoderBox    StorageBox for encoder values
      */
     public void initSlam(EncoderBox encoderBox, LidarBox lidarBox) {
+
+        executorService = Executors.newFixedThreadPool(1);
 
         // Set fields
         this.slamActive = true;
@@ -93,7 +93,7 @@ public class Slam extends Thread {
         // New objects for running SLAM.
         poseChange = new PoseChange();
         myLidar = new Laser(1000, 1000,
-                360, 10000,
+                360, 4000,
                 0, 0.1);
         slam = new RMHCSLAM(myLidar, 820, 30, 1337);
         robot = new Robot(30, 110);
@@ -189,7 +189,7 @@ public class Slam extends Thread {
     public void close() {
         slamActive = false;
         slamMapStream.stopMapStream();
-        slamMapStream.interrupt();
+        executorService.shutdown();
         writeMap();
     }
 }

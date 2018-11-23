@@ -221,7 +221,7 @@ public class AppManager {
      */
     private void doStartSlam() {
 
-        this.slam = new Slam();
+
         this.lidar = new Lidar();
 
         if (this.lidar.doConnectLidar("/dev/ttyUSB0")) {
@@ -230,7 +230,7 @@ public class AppManager {
 
             this.lidarThread = new LidarThread(lidar.getLidarDevice(), lidarBox, 1000);
 
-            this.slam.initSlam(encoderBox, lidarBox);
+            this.slam = new Slam(encoderBox, lidarBox);
 
            /* if (appRunning && !slam.getMotorActive()) {
                 slam.doAddMotorInterface(this.motorInterface);
