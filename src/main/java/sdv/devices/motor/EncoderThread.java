@@ -35,14 +35,11 @@ public class EncoderThread implements Runnable {
             String[] s = getEncoder();
             box.setValue(s);
             //Prints delta time between fetching and setting values in storagebox
-            System.out.println("Time since getEncoder(): " + (System.currentTimeMillis() - time));
             try {
                 Thread.sleep(999);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            System.out.println("After sleep: " + (System.currentTimeMillis() - time));
         }
     }
 
@@ -62,7 +59,6 @@ public class EncoderThread implements Runnable {
             //System.out.println("Encoder2: " + pythonClient2.response[3]);
             strings = s;
         } else {
-            System.out.println("getEncoder() FAILED");
             strings = new String[]{"NO RESPONSE", "NO RESPONSE", "NO RESPONSE", "NO RESPONSE"};
         }
         return strings;

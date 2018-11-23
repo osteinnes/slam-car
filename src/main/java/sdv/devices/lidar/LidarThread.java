@@ -64,8 +64,6 @@ public class LidarThread extends Thread {
                 // Enter when there is mor than 1059 samples in the scan.
                 if (s.size() > (this.sampleLimit - 1)) {
 
-                    System.out.println("Enterd IF with " + s.size() + " samples");
-
                     // For each sample, get distance.
                     for (int i = 0; i <= (this.sampleLimit - 1); i++) {
                         int dist = s.get(i).getDistance();

@@ -105,8 +105,6 @@ public class Slam extends Thread {
      */
     public void run() {
 
-        System.out.println("SLAM activated!");
-
         do {
             if (lidarBox.isReady()) {
 
@@ -139,6 +137,9 @@ public class Slam extends Thread {
                     }
                 }
                 // Update slam with new scan and position change
+
+                System.out.println();
+                System.out.println("Position change: " + poseChange.toString());
                 slam.update(scan, poseChange);
                 slam.getmap(mapbytes);
                 slamMapStream.setByteMap(mapbytes);
@@ -148,7 +149,7 @@ public class Slam extends Thread {
     }
 
     /**
-     * Writes a map of the scan to a file.
+     * Writes a map of the scan to a filedi20.
      */
     public void writeMap() {
         // Byte-array we store map in.
