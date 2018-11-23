@@ -228,7 +228,7 @@ public class AppManager {
             this.lidar.setLidarValues(1, 1000);
             this.lidar.startLidarScan();
 
-            this.lidarThread = new LidarThread(lidar.getLidarDevice(), lidarBox, 1000);
+            this.lidarThread = new LidarThread(lidar.getLidarDevice(), lidarBox, 1075);
 
             this.slam = new Slam(encoderBox, lidarBox);
 

@@ -92,7 +92,7 @@ public class Slam extends Thread {
 
         // New objects for running SLAM.
         poseChange = new PoseChange();
-        myLidar = new Laser(1000, 1000,
+        myLidar = new Laser(1100, 1000,
                 360, 4000,
                 0, 0.1);
         slam = new RMHCSLAM(myLidar, 820, 30, 1337);
