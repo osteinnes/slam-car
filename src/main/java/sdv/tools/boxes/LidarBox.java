@@ -1,6 +1,7 @@
 package sdv.tools.boxes;
 
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 /**
@@ -21,11 +22,15 @@ public class LidarBox extends StorageBox{
     // Holds isReady-flag
     private volatile boolean isReady;
 
+    // Atomic bool to make box thread-safe
+    private AtomicBoolean atomicBoolean;
+
     /**
      * Creates empty scan-array when instance is created.
      */
     public LidarBox() {
         scans = new int[]{};
+        atomicBoolean = new AtomicBoolean(false);
     }
 
     // For thread safety upon expansion
@@ -39,6 +44,7 @@ public class LidarBox extends StorageBox{
      */
     public void setValue(int[] currentScan) {
         isReady = updater.compareAndSet(this, this.scans, currentScan);
+        atomicBoolean.set(isReady);
     }
 
     /**
@@ -46,7 +52,7 @@ public class LidarBox extends StorageBox{
      * @return scan values for last revolution
      */
     public int[] getValue() {
-        isReady = false;
+        atomicBoolean.set(false);
         return scans;
     }
 
@@ -55,7 +61,7 @@ public class LidarBox extends StorageBox{
      * @return true if scans is ready to be read. (prev values was changed)
      */
     public boolean isReady() {
-        return isReady;
+        return atomicBoolean.get();
     }
 
 }

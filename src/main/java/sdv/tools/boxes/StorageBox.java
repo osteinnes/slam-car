@@ -1,5 +1,7 @@
 package sdv.tools.boxes;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * StorageBox represents a common field-box
  * for threads. It is abstrated, which means we
@@ -17,7 +19,7 @@ public abstract class StorageBox {
     // Boolean field which can be used to
     // determine if the box is active, start,
     // and stop it.
-    protected boolean run;
+    protected AtomicBoolean run = new AtomicBoolean(false);
 
     /**
      * Sets the run-flag of the Box to true
@@ -26,7 +28,7 @@ public abstract class StorageBox {
      * when prompted by isActive()
      */
     public void start(){
-        run = true;
+        run.set(true);
     }
 
     /**
@@ -36,7 +38,7 @@ public abstract class StorageBox {
      * when promted by isActive()
      */
     public void stop(){
-        run = false;
+        run.set(false);
     }
 
     /**
@@ -44,7 +46,7 @@ public abstract class StorageBox {
      * @return run-status(flag)
      */
     public boolean active(){
-        return run;
+        return run.get();
     }
 
 }
