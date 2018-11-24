@@ -36,9 +36,9 @@ public class LidarThread extends Thread {
      * Constructor of the LidarThread-class. Creates accepts instances
      * of SweepDevice, LidarBox and the samplelimit for one revolution.
      *
-     * @param sweepDevice   LiDAR-instance
-     * @param lidarBox      StorageBox-instance
-     * @param sampleLimit   Limit of samples per revolution
+     * @param sweepDevice LiDAR-instance
+     * @param lidarBox    StorageBox-instance
+     * @param sampleLimit Limit of samples per revolution
      */
     public LidarThread(SweepDevice sweepDevice, LidarBox lidarBox, int sampleLimit) {
         this.sweepDevice = sweepDevice;
@@ -48,42 +48,48 @@ public class LidarThread extends Thread {
     }
 
     @Override
-    public void run(){
-        while(true){
-            // Loops through samples of each scan
+    public void run() {
+        boolean firstScan = true;
 
-            List<SweepSample> s = sweepDevice.nextScan();
-            // Int-array of distances in scan.
-            int[] distanceA = new int[s.size()];
+        while (true) {
+            if (!firstScan) {
+                // Loops through samples of each scan
 
-            // Scan vector
-            Vector<int[]> scans = new Vector<int[]>();
+                List<SweepSample> s = sweepDevice.nextScan();
+                // Int-array of distances in scan.
+                int[] distanceA = new int[s.size()];
 
-
-
-            // For each sample, get distance.
-            for (int i = 0; i <= s.size()-1; i++) {
-                int dist = s.get(i).getDistance();
-
-                distanceA[i] = dist * 10;
-
-            }
-
-            // Add distance to scan vector
-            scans.addElement(distanceA);
-            ns = scans.size();
-
-            // For each scan
-            for (int x = 0; x < ns; x++) {
-
-                int[] scan = scans.elementAt(x);
-
-                lidarBox.setValue(scan);
+                // Scan vector
+                Vector<int[]> scans = new Vector<int[]>();
 
 
+                // For each sample, get distance.
+                for (int i = 0; i <= s.size() - 1; i++) {
+                    int dist = s.get(i).getDistance();
+
+                    distanceA[i] = dist * 10;
+
+                }
+
+                // Add distance to scan vector
+                scans.addElement(distanceA);
+                ns = scans.size();
+
+                // For each scan
+                for (int x = 0; x < ns; x++) {
+
+                    int[] scan = scans.elementAt(x);
+
+                    lidarBox.setValue(scan);
+
+
+                }
+
+            } else {
+                List<SweepSample> s = sweepDevice.nextScan();
+                firstScan = false;
             }
         }
-
 
 
     }
