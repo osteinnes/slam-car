@@ -18,7 +18,6 @@ public class StreamVideo {
     private DatagramSocket socket;
     private ByteArrayOutputStream baos;
 
-
     public StreamVideo(int localPort) {
         doSetupSocket(localPort);
     }
@@ -47,9 +46,7 @@ public class StreamVideo {
      */
     public void doConnect() {
         try {
-
-                this.socket.connect(InetAddress.getByName("192.168.0.101"), 9000);
-
+            this.socket.connect(InetAddress.getByName("192.168.0.101"), 9000);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -67,9 +64,7 @@ public class StreamVideo {
         if (image != null) {
             ImageIO.write(image, "jpg", baos);
             baos.flush();
-
             byte[] buffer = baos.toByteArray();
-
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             this.socket.send(packet);
         }

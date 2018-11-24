@@ -84,7 +84,6 @@ public abstract class TcpServer {
 
     public void closeSocket() {
         try {
-
             inFromClient.close();
             outToClient.close();
             connectionSocket.close();

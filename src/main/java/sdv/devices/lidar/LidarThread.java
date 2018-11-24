@@ -50,48 +50,32 @@ public class LidarThread extends Thread {
     @Override
     public void run() {
         boolean firstScan = true;
-
         while (true) {
             if (!firstScan) {
                 // Loops through samples of each scan
-
                 List<SweepSample> s = sweepDevice.nextScan();
                 // Int-array of distances in scan.
                 int[] distanceA = new int[s.size()];
-
                 // Scan vector
                 Vector<int[]> scans = new Vector<int[]>();
-
-
                 // For each sample, get distance.
                 for (int i = 0; i <= s.size() - 1; i++) {
                     int dist = s.get(i).getDistance();
-
                     distanceA[i] = dist * 10;
-
                 }
-
                 // Add distance to scan vector
                 scans.addElement(distanceA);
                 ns = scans.size();
-
                 // For each scan
                 for (int x = 0; x < ns; x++) {
-
                     int[] scan = scans.elementAt(x);
-
                     lidarBox.setValue(scan);
-
-
                 }
-
             } else {
                 List<SweepSample> s = sweepDevice.nextScan();
                 firstScan = false;
             }
         }
-
-
     }
 
     /**

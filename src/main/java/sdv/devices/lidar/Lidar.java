@@ -14,9 +14,7 @@ public class Lidar {
     /**
      * Constructor of the Lidar-class
      */
-    public Lidar() {
-
-    }
+    public Lidar() {}
 
     /**
      *

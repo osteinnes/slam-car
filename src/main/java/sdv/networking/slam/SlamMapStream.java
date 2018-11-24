@@ -29,18 +29,14 @@ public class SlamMapStream extends Thread {
     public SlamMapStream(int port, int mapSizePixels) {
         setUpMapStream(port);
         setFields(mapSizePixels);
-
     }
 
     @Override
     public void run() {
-
         slamServer.sendToClient(mapbytes);
         System.out.println("Uploading new map!");
         System.out.println();
         newMap = false;
-
-
     }
 
     /**

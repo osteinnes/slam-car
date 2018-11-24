@@ -28,6 +28,4 @@ public class SlamServer extends TcpServer {
             System.out.println("Socket failed to print SLAM-map to GUI");
         }
     }
-
-
 }

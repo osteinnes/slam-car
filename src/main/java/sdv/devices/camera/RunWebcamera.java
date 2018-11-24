@@ -38,11 +38,8 @@ public class RunWebcamera extends Thread {
                 streamVideo.closeSocket();
             }
         }
-
         readWebcam.close();
         streamVideo.closeSocket();
-
-
     }
 
     public void stopCam() {

@@ -116,20 +116,9 @@ public class AppManager {
     private void doProgramLogic() {
         long k = System.currentTimeMillis();
         do {
-
-
-
             do {
-
                 this.controlMessage = this.appController.getControlMsg();
-
-                if ((k + 3000) < System.currentTimeMillis()) {
-                    System.out.println(" Thread count: " + java.lang.Thread.activeCount());
-                    k = System.currentTimeMillis();
-                }
-
                 doCreateBooleanParam();
-                System.out.println("DEBUG STRING: " + this.controlMessage);
 
                 if (startMotorControlParam) {
 
@@ -162,8 +151,6 @@ public class AppManager {
             } while (controllerConnected);
 
             do {
-
-
                 if (slamRunning) {
                     doStopSlam();
                     System.out.println("SLAM stopped");
@@ -191,9 +178,7 @@ public class AppManager {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
             } while (!controllerConnected);
-
         } while (true);
     }
 
@@ -201,45 +186,24 @@ public class AppManager {
      * Starts the motor controller.
      */
     private void doStartMotorController() {
-
-
         this.motorInterface = new MotorInterface(encoderBox);
         this.motorInterface.start();
-
-
-       /* if (slamRunning && !slam.getMotorActive()) {
-            slam.doAddMotorInterface(this.motorInterface);
-        }*/
-
-
         this.appRunning = true;
-
     }
 
     /**
      * Start slam-algorithm
      */
     private void doStartSlam() {
-
-
         this.lidar = new Lidar();
 
         if (this.lidar.doConnectLidar("/dev/ttyUSB0")) {
             this.lidar.setLidarValues(1, 1000);
             this.lidar.startLidarScan();
-
             this.lidarThread = new LidarThread(lidar.getLidarDevice(), lidarBox, 1075);
-
             this.slam = new Slam(encoderBox, lidarBox);
-
-           /* if (appRunning && !slam.getMotorActive()) {
-                slam.doAddMotorInterface(this.motorInterface);
-            }*/
-
             lidarThread.start();
-
             slam.start();
-
             this.slamRunning = true;
         }
     }
@@ -257,12 +221,9 @@ public class AppManager {
      * Stops the motor controller
      */
     private void doStopMotorController() {
-
         this.encoderBox.stop();
         motorInterface.doStop();
         motorInterface.interrupt();
-
-
         this.appRunning = false;
     }
 

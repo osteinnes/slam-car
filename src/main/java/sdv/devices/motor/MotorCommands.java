@@ -29,7 +29,6 @@ public class MotorCommands {
     public void turnRight(){
         pythonClient.setBackwardMotor2Speed(motorSpeed);
         pythonClient.setForwardMotor1Speed(motorSpeed);
-        //System.out.println("TURN LEFT REQUEST SENT.");
     }
 
     /**
@@ -38,7 +37,6 @@ public class MotorCommands {
     public void turnLeft(){
         pythonClient.setForwardMotor2Speed(motorSpeed);
         pythonClient.setBackwardMotor1Speed(motorSpeed);
-        //System.out.println("TURN RIGHT REQUEST SENT.");
     }
 
     /**
@@ -47,7 +45,6 @@ public class MotorCommands {
     public void forward(){
         pythonClient.setForwardMotor1Speed(motorSpeed);
         pythonClient.setForwardMotor2Speed(motorSpeed);
-        //System.out.println("FORWRAD REQUEST SENT");
     }
 
     /**
@@ -56,7 +53,6 @@ public class MotorCommands {
     public void reverse(){
         pythonClient.setBackwardMotor1Speed(motorSpeed);
         pythonClient.setBackwardMotor2Speed(motorSpeed);
-        //System.out.println("REVERSE REQUEST SENT");
     }
 
     /**
@@ -71,7 +67,6 @@ public class MotorCommands {
      */
     public void getEncoderData(){
         pythonClient.sendEncoderRequest();
-        //System.out.println("ENCODERDATA REQUEST SENT");
     }
 
     /**
